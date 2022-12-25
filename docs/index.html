@@ -13,6 +13,8 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <!-- 默认主题 -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
+	<!-- 侧边栏箭头样式折叠 -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 </head>
 
 <body>
@@ -26,6 +28,12 @@
             repo: 'https://github.com/YSGStudyHards',
             // 侧边栏支持，默认加载的是项目根目录下的_sidebar.md文件
             loadSidebar: true,
+			// 侧边栏折叠
+			alias: {
+				'/.*/_sidebar.md': '/_sidebar.md',
+			},
+			// 设置侧边栏显示级别
+			sidebarDisplayLevel: 1,
             // 导航栏支持，默认加载的是项目根目录下的_navbar.md文件
             loadNavbar: true,
             // 封面支持，默认加载的是项目根目录下的_coverpage.md文件
@@ -67,6 +75,8 @@
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
     <!--在所有的代码块上添加一个简单的Click to copy按钮来允许用户从你的文档中轻易地复制代码-->
     <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+	<!-- 插件：侧边栏折叠 -->
+	<script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
 </body>
 
 </html>
