@@ -2,7 +2,7 @@
 # Nginx 处理HTTP请求的 11 个过程
 Nginx 处理请求过程总共划分为 11 个阶段，按顺序依次是 post-read、server-rewrite、find-config、rewrite、post-rewrite、preaccess、access、post-access、precontent、content、log。
 
-![](_img\02-Web安全\02-中间件/1668580238949-f722eadd-7ae2-4f14-a8d7-205082467baa.jpeg)
+![](../../_img\02-Web安全\02-中间件/1668580238949-f722eadd-7ae2-4f14-a8d7-205082467baa.jpeg)
 
 
 ## 3.1、post-read阶段

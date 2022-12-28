@@ -4,7 +4,7 @@
 
 
 # 0x01 应急场景
-某天，网站管理员登录服务器进行巡检时，发现端口连接里存在两条可疑的连接记录，如下图：<br />![linux-10-1.png](/_img\05-应急响应/1656921879322-d54e42e6-cd49-41e4-a275-bc1cdb11ea85.png)
+某天，网站管理员登录服务器进行巡检时，发现端口连接里存在两条可疑的连接记录，如下图：<br />![linux-10-1.png](../../_img\05-应急响应/1656921879322-d54e42e6-cd49-41e4-a275-bc1cdb11ea85.png)
 
 1.  TCP初始化连接三次握手吧：发SYN包，然后返回SYN/ACK包，再发ACK包，连接正式建立。但是这里有点出入，当请求者收到SYS/ACK包后，就开始建立连接了，而被请求者第三次握手结束后才建立连接。 
 2.  客户端TCP状态迁移：<br />CLOSED->SYN_SENT->ESTABLISHED->FIN_WAIT_1->FIN_WAIT_2->TIME_WAIT->CLOSED<br />服务器TCP状态迁移：<br />CLOSED->LISTEN->SYN recv->ESTABLISHED->CLOSE_WAIT->LAST_ACK->CLOSED 
