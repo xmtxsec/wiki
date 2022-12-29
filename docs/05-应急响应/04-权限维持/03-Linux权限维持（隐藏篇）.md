@@ -6,7 +6,7 @@
 ### 0x01 隐藏文件
 Linux 下创建一个隐藏文件：`touch .test.txt`
 
-touch 命令可以创建一个文件，文件名前面加一个 点 就代表是隐藏文件,如下图：<br />![privilege-2-1.png](../../_img\05-应急响应/1656919289574-f8b5e25f-1e85-45ce-a045-38cd0bd5d27a.png)
+touch 命令可以创建一个文件，文件名前面加一个 点 就代表是隐藏文件,如下图：<br />![privilege-2-1.png](_img\05-应急响应/1656919289574-f8b5e25f-1e85-45ce-a045-38cd0bd5d27a.png)
 
 一般的Linux下的隐藏目录使用命令`ls -l`是查看不出来的，只能查看到文件及文件夹，查看Linux下的隐藏文件需要用到命令：`ls -al`
 
@@ -33,7 +33,7 @@ lsattr  evil.php   属性查看
 chattr -i evil.php 解除锁定
 rm -rf 1.evil.php  删除文件
 ```
-![privilege-2-2.png](../../_img\05-应急响应/1656919309088-84191743-24db-4ecf-8ce9-a71beddebea5.png)
+![privilege-2-2.png](_img\05-应急响应/1656919309088-84191743-24db-4ecf-8ce9-a71beddebea5.png)
 
 
 # 0x04 隐藏历史操作命令
@@ -62,7 +62,7 @@ history | grep "keyword"
 ```
 history -d [num]
 ```
-![privilege-2-3.png](../../_img\05-应急响应/1656919328042-46ef2a2e-e897-4197-acac-3c36414271c1.png)
+![privilege-2-3.png](_img\05-应急响应/1656919328042-46ef2a2e-e897-4197-acac-3c36414271c1.png)
 
 这种技巧是关键记录删除，或者我们可以暴力点，比如前150行是用户的正常操作记录，150以后是攻击者操作记录。我们可以只保留正常的操作，删除攻击痕迹的历史操作记录，这里，我们只保留前150行：
 ```
@@ -120,7 +120,7 @@ ssh -p 80 root@192.168.28.128
 #关闭复用
 echo threathunterleaving | socat - tcp:192.168.28.128:80
 ```
-![privilege-2-4.png](../../_img\05-应急响应/1656919349681-6921a3c6-f2bd-4e5d-a764-fa6912e285b4.png)
+![privilege-2-4.png](_img\05-应急响应/1656919349681-6921a3c6-f2bd-4e5d-a764-fa6912e285b4.png)
 具体文章详见：[远程遥控 IPTables 进行端口复用](https://www.freebuf.com/articles/network/137683.html)
 
 
@@ -140,9 +140,9 @@ cp libprocesshider.so /usr/local/lib/
 echo /usr/local/lib/libprocesshider.so >> /etc/ld.so.preload
 ```
 
-测试：运行 evil_script.py，<br />![privilege-2-5.png](../../_img\05-应急响应/1656919368972-0860be60-7f6e-4a67-af84-3770ddbd6983.png)
+测试：运行 evil_script.py，<br />![privilege-2-5.png](_img\05-应急响应/1656919368972-0860be60-7f6e-4a67-af84-3770ddbd6983.png)
 
-此时发现在top 与 ps 中都无法找到 evil_script.py， cpu 使用率高,但是却找不到任何占用cpu高的程序。<br />![privilege-2-6.png](../../_img\05-应急响应/1656919374482-0bc6d9ce-92a7-40e4-95e0-534ed30b6221.png)
+此时发现在top 与 ps 中都无法找到 evil_script.py， cpu 使用率高,但是却找不到任何占用cpu高的程序。<br />![privilege-2-6.png](_img\05-应急响应/1656919374482-0bc6d9ce-92a7-40e4-95e0-534ed30b6221.png)
 
 如何在Linux中发现隐藏的进程，
 
@@ -156,7 +156,7 @@ sudo yum install unhide
 unhide [options] test_list
 ```
 
-使用`unhide proc`发现隐藏进程evil_script.py，如下图所示：<br />![privilege-2-7.png](../../_img\05-应急响应/1656919383525-555d72ad-5807-4489-84d0-8e3df417158a.png)
+使用`unhide proc`发现隐藏进程evil_script.py，如下图所示：<br />![privilege-2-7.png](_img\05-应急响应/1656919383525-555d72ad-5807-4489-84d0-8e3df417158a.png)
 
 第二种方法：进程注入工具linux-inject<br />linux-inject是用于将共享对象注入Linux进程的工具<br />github项目地址： [https://github.com/gaffe23/linux-inject.git](https://github.com/gaffe23/linux-inject.git)
 ```
@@ -169,7 +169,7 @@ cd linux-inject && make
 ./inject -n sample-target sample-library.so
 ```
 
-验证进程注入成功，如下图所示：<br />![privilege-2-8.png](../../_img\05-应急响应/1656919396023-beb140db-a246-4d54-9f22-c0f5b71f676d.png)
+验证进程注入成功，如下图所示：<br />![privilege-2-8.png](_img\05-应急响应/1656919396023-beb140db-a246-4d54-9f22-c0f5b71f676d.png)
 
 Cymothoa是一款隐秘的后门工具。它通过向目标主机活跃的进程注入恶意代码，从而获取和原进程相同的权限。该工具最大的优点就是不创建新的进程，不容易被发现。<br />下载地址：[https://sourceforge.net/projects/cymothoa/files/cymothoa-1-beta/](https://sourceforge.net/projects/cymothoa/files/cymothoa-1-beta/)
 ```

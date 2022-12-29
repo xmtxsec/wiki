@@ -31,14 +31,14 @@ Windows Server 2008 R2 系统的审核功能在默认状态下并没有启用 �
 
 PS：默认状态下，也会记录一些简单的日志，日志默认大小20M
 
-**设置1**：开始 → 管理工具 → 本地安全策略 → 本地策略 → 审核策略，参考配置操作：<br />![log-1-1.png](../../_img\05-应急响应/1656917026572-b15953cc-436b-4097-bb6b-aa9c3411afcf.png)
+**设置1**：开始 → 管理工具 → 本地安全策略 → 本地策略 → 审核策略，参考配置操作：<br />![log-1-1.png](_img\05-应急响应/1656917026572-b15953cc-436b-4097-bb6b-aa9c3411afcf.png)
 
-**设置2**：设置合理的日志属性，即日志最大大小、事件覆盖阀值等：<br />![log-1-2.png](../../_img\05-应急响应/1656917031207-a12fad75-dbaf-4d80-b296-0c04dbb6124a.png)
+**设置2**：设置合理的日志属性，即日志最大大小、事件覆盖阀值等：<br />![log-1-2.png](_img\05-应急响应/1656917031207-a12fad75-dbaf-4d80-b296-0c04dbb6124a.png)
 
 **查看系统日志方法：**
 
 1.  在**“开始”**菜单上，依次指向**“所有程序”**、**“管理工具”**，然后单击**“事件查看器”** 
-2.  按 "**Window+R**"，输入 ”**eventvwr.msc**“ 也可以直接进入“**事件查看器**”<br /> ![log-1-3.png](../../_img\05-应急响应/1656917036335-6ccfeb30-4a8f-48cd-a02f-576dad2f4cd7.png)
+2.  按 "**Window+R**"，输入 ”**eventvwr.msc**“ 也可以直接进入“**事件查看器**”<br /> ![log-1-3.png](_img\05-应急响应/1656917036335-6ccfeb30-4a8f-48cd-a02f-576dad2f4cd7.png)
 
 
 # 0x03 事件日志分析
@@ -80,7 +80,7 @@ PS：默认状态下，也会记录一些简单的日志，日志默认大小20M
 2.  在事件查看器中，单击**“安全”**，查看安全日志； 
 3.  在安全日志右侧操作中，点击**“筛选当前日志”**，输入事件ID进行筛选。<br />4624  --登录成功<br />4625  --登录失败<br />4634 -- 注销成功<br />4647 -- 用户启动的注销<br />4672 -- 使用超级用户（如管理员）进行登录 
 
-我们输入事件ID：4625进行日志筛选，发现事件ID：4625，事件数175904，即用户登录失败了175904次，那么这台服务器管理员账号可能遭遇了暴力猜解。<br />![log-1-4.png](../../_img\05-应急响应/1656917058051-dd44ffcc-c730-4e64-a587-ad78411629c9.png)
+我们输入事件ID：4625进行日志筛选，发现事件ID：4625，事件数175904，即用户登录失败了175904次，那么这台服务器管理员账号可能遭遇了暴力猜解。<br />![log-1-4.png](_img\05-应急响应/1656917058051-dd44ffcc-c730-4e64-a587-ad78411629c9.png)
 
 案例2：可以利用eventlog事件来查看计算机开关机的记录：
 
@@ -90,7 +90,7 @@ PS：默认状态下，也会记录一些简单的日志，日志默认大小20M
 6006 信息 EventLog 事件日志服务已停止。(关机)
 6009 信息 EventLog 按ctrl、alt、delete键(非正常)关机
 
-我们输入事件ID：6005-6006进行日志筛选，发现了两条在2018/7/6 17:53:51左右的记录，也就是我刚才对系统进行重启的时间。<br />![log-1-5.png](../../_img\05-应急响应/1656917082584-7396924f-dd1e-4bec-9f27-6c2c8926f9c7.png)
+我们输入事件ID：6005-6006进行日志筛选，发现了两条在2018/7/6 17:53:51左右的记录，也就是我刚才对系统进行重启的时间。<br />![log-1-5.png](_img\05-应急响应/1656917082584-7396924f-dd1e-4bec-9f27-6c2c8926f9c7.png)
 
 
 # 0x04 日志分析工具
@@ -101,7 +101,7 @@ Log Parser（是微软公司出品的日志分析工具，它功能强大，使�
 Log Parser 2.2下载地址：[https://www.microsoft.com/en-us/download/details.aspx?id=24659](https://www.microsoft.com/en-us/download/details.aspx?id=24659)
 
 Log Parser 使用示例：[https://mlichtenberg.wordpress.com/2011/02/03/log-parser-rocks-more-than-50-examples/](https://mlichtenberg.wordpress.com/2011/02/03/log-parser-rocks-more-than-50-examples/)
-![log-1-6.png](../../_img\05-应急响应/1656917094931-53b7c80e-3b3d-449f-862f-c9e9d1176ac0.png)
+![log-1-6.png](_img\05-应急响应/1656917094931-53b7c80e-3b3d-449f-862f-c9e9d1176ac0.png)
 
 **基本查询结构**
 ```
@@ -142,7 +142,7 @@ LogParser.exe -i:EVT –o:DATAGRID  "SELECT TimeGenerated,EventID,Message FROM c
 
 依赖包：Microsoft .NET Framework 4 .5，下载地址：[https://www.microsoft.com/en-us/download/details.aspx?id=42642](https://www.microsoft.com/en-us/download/details.aspx?id=42642)
 
-查询最近用户登录情况：<br />![log-1-7.png](../../_img\05-应急响应/1656917115442-c2eb92c0-e187-48ac-a628-3664119822f2.png)
+查询最近用户登录情况：<br />![log-1-7.png](_img\05-应急响应/1656917115442-c2eb92c0-e187-48ac-a628-3664119822f2.png)
 
 
 ## Event Log Explorer
@@ -150,6 +150,6 @@ Event Log Explorer是一款非常好用的Windows日志分析工具。可用于�
 
 下载地址：[https://event-log-explorer.en.softonic.com/](https://event-log-explorer.en.softonic.com/)
 
-![log-1-8.png](../../_img\05-应急响应/1656917126801-6fe2241a-f7cd-4bf6-bb4b-0cdb214b6d76.png)
+![log-1-8.png](_img\05-应急响应/1656917126801-6fe2241a-f7cd-4bf6-bb4b-0cdb214b6d76.png)
 
 参考链接：<br />Windows日志分析   [https://mp.weixin.qq.com/s/ige5UO8WTuOOO3yRw-LeqQ](https://mp.weixin.qq.com/s/ige5UO8WTuOOO3yRw-LeqQ)

@@ -22,13 +22,13 @@
 
 -  检查方法：<br />a、打开注册表 ，查看管理员对应键值。<br />b、使用D盾_web查杀工具，集成了对克隆账号检测的功能。 
 
-![sum-1-1.png](../../_img\05-应急响应/1656917178594-02f8575f-9432-44aa-b1b6-bd9df256364f.png)
+![sum-1-1.png](_img\05-应急响应/1656917178594-02f8575f-9432-44aa-b1b6-bd9df256364f.png)
 
 4、结合日志，查看管理员登录时间、用户名是否存在异常。
 
 -  检查方法：<br />a、Win+R 打开运行，输入"eventvwr.msc"，回车运行，打开“事件查看器”。<br />b、导出 Windows 日志 -- 安全，利用微软官方工具 [Log Parser](https://www.microsoft.com/en-us/download/details.aspx?id=24659) 进行分析。 
 
-![sum-1-2.png](../../_img\05-应急响应/1656917183370-f152ec19-e865-460b-8102-dff6bd56f621.png)
+![sum-1-2.png](_img\05-应急响应/1656917183370-f152ec19-e865-460b-8102-dff6bd56f621.png)
 
 
 ## 1.2 检查异常端口、进程
@@ -36,7 +36,7 @@
 
 -  检查方法：<br />a、使用`netstat -ano` 命令查看目前的网络连接，定位可疑的 ESTABLISHED<br />b、根据 netstat 命令定位出的 PID 编号，再通过 tasklist 命令进行进程定位 `tasklist | findstr "PID"` 
 
-![sum-1-3.png](../../_img\05-应急响应/1656917190277-b91ac393-d8e3-41f1-bc9a-d37163a11609.png)
+![sum-1-3.png](_img\05-应急响应/1656917190277-b91ac393-d8e3-41f1-bc9a-d37163a11609.png)
 
 2、进程
 
@@ -62,7 +62,7 @@ HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\run
 HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
 HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Runonce
 ```
-<br />检查右侧是否有启动异常的项目，如有请删除，并建议安装杀毒软件进行病毒查杀，清除残留病毒或木马。<br />d、利用安全软件查看启动项、开机时间管理等。<br />e、组策略，运行 `gpedit.msc` <br />![sum-1-4.png](../../_img\05-应急响应/1656917234189-2f9a9703-0d97-44ac-9278-34d9c2e417f2.png)
+<br />检查右侧是否有启动异常的项目，如有请删除，并建议安装杀毒软件进行病毒查杀，清除残留病毒或木马。<br />d、利用安全软件查看启动项、开机时间管理等。<br />e、组策略，运行 `gpedit.msc` <br />![sum-1-4.png](_img\05-应急响应/1656917234189-2f9a9703-0d97-44ac-9278-34d9c2e417f2.png)
 
 2、检查计划任务
 

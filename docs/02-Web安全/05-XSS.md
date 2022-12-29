@@ -32,7 +32,7 @@ XSS全称为Cross Site Scripting，为了和CSS(Cas-cading Style Sheet,)分开�
 
 	DOM型XSS其实是一种特殊类型的反射型XSS，它是基于DOM文档对象模型的一种漏洞。HTML的标签都是节点，而这些节点组成了DOM的整体结构一节点树。通过HTML DOM,树中的所有节点均可通过JavaScript进行访问。所有HTML元素(节点)均可被修改，也可以创建或删除节点。
 
-![image.png](../../_img/02-Web安全/1655877299491-9b82ba8c-25c6-4cef-8f73-3fcaacc0e202.png)
+![image.png](_img/02-Web安全/1655877299491-9b82ba8c-25c6-4cef-8f73-3fcaacc0e202.png)
 
 	攻击方式:用户请求一个经过专门设计的URL，它由攻击者提交，而且其中包含XSS代码。服务器的响应不会以任何形式包含攻击者的脚本。当用户的浏览器处理这个响应时，DOM对象就会处理XSS代码，导致存在XSS漏洞。
 
