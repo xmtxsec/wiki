@@ -22,10 +22,10 @@ ARP协议位于TCP/IP模型的网络层，这个协议主要用来解决逻辑�
 nmap -sn 192.168.1.0/24
 ```
 注：-sn 仅判断目标设备是否存活不进行仔细地扫描，避免浪费时间。
-![image.png](./assets/1653878634099-0283babb-5edb-4938-9953-497de290d3d1.png)
+![image.png](_img/assets/1653878634099-0283babb-5edb-4938-9953-497de290d3d1.png)
 
 wireshark抓包如图
-![image.png](./assets/1653878644605-0a4f0ff8-7f6f-426c-ac7e-8d495c174560.png)
+![image.png](_img/assets/1653878644605-0a4f0ff8-7f6f-426c-ac7e-8d495c174560.png)
 
 
 ## 利用ICMP协议发现
@@ -33,7 +33,7 @@ Nmap使用 -PE 参数可以实现ICMP的设备发现，这个过程实际上和p
 ```
 nmap -sn -PE 192.168.1.15
 ```
-![image.png](./assets/1653878653627-69970b9f-f7dc-4595-bef7-584e8548133f.png)
+![image.png](_img/assets/1653878653627-69970b9f-f7dc-4595-bef7-584e8548133f.png)
 
 因为这里是同一局域网下，wireshark抓包效果与TCP SYN扫描相同。
 
@@ -41,7 +41,7 @@ Nmap使用 -PP 参数就可以实现ICMP的时间戳设备发现
 ```
 nmap -sn -PP 192.168.1.15
 ```
-![image.png](./assets/1653878664432-cae9b6bd-7d01-4b51-913a-339ea55e2949.png)
+![image.png](_img/assets/1653878664432-cae9b6bd-7d01-4b51-913a-339ea55e2949.png)
 
 因为这里是同一局域网下，wireshark抓包效果与TCP SYN扫描相同。
 
@@ -49,7 +49,7 @@ Nmap使用 -PM 参数就可以实现ICMP的地址掩码设备发现。
 ```
 nmap -sn -PM 192.168.1.15
 ```
-![image.png](./assets/1653878675805-3f1126e1-0c85-422a-bbb2-50204af65849.png)
+![image.png](_img/assets/1653878675805-3f1126e1-0c85-422a-bbb2-50204af65849.png)
 
 因为这里是同一局域网下，wireshark抓包效果与TCP SYN扫描相同。
 
@@ -61,10 +61,10 @@ Nmap使用 -PS 参数来向目标设备发送一个设置了SYN标志的数据�
 ```
 nmap -sn -PS 192.168.1.15
 ```
-![image.png](./assets/1653878687415-8fd4752a-5093-4c7f-87fb-4b22f9542006.png)
+![image.png](_img/assets/1653878687415-8fd4752a-5093-4c7f-87fb-4b22f9542006.png)
 
 wireshark抓包如图，因为我这里是同一局域网下Nmap会默认使用ARP扫描，所以无法抓取TCP包
-![image.png](./assets/1653878696367-ea751e3c-e8bf-439e-997b-c858cdf5e74e.png)
+![image.png](_img/assets/1653878696367-ea751e3c-e8bf-439e-997b-c858cdf5e74e.png)
 
 
 ### 2、TCP ACK
@@ -72,7 +72,7 @@ Nmap使用 -PA 参数来进行TCP ACK扫描。TCP ACK扫描和TCP SYN扫描很�
 ```
 nmap -sn -PA 192.168.1.15
 ```
-![image.png](./assets/1653878754298-b5053015-1196-4d09-ad99-aead99b0b873.png)
+![image.png](_img/assets/1653878754298-b5053015-1196-4d09-ad99-aead99b0b873.png)
 
 因为这里是同一局域网下，wireshark抓包效果与TCP SYN扫描相同。
 
@@ -82,7 +82,7 @@ Nmap使用 -PU 参数来进行UDP扫描。当一个端口接收到一个UDP数�
 ```
 nmap -sn -PU 192.168.1.15
 ```
-![image.png](./assets/1653878764554-4d7afc40-e0a0-4f21-90c7-a78264c5b9e9.png)
+![image.png](_img/assets/1653878764554-4d7afc40-e0a0-4f21-90c7-a78264c5b9e9.png)
 
 因为这里是同一局域网下，wireshark抓包效果与TCP SYN扫描相同。
 
@@ -113,19 +113,19 @@ nmap -sn -PU 192.168.1.15
 ```
 nmap 192.168.1.15
 ```
-![image.png](./assets/1653878786572-b33a3f2f-3833-4acb-bade-5c68a555aa67.png)
+![image.png](_img/assets/1653878786572-b33a3f2f-3833-4acb-bade-5c68a555aa67.png)
 
 **2、对IP地址不连续的多台设备进行扫描**
 ```
 nmap 192.168.1.5 192.168.1.15
 ```
-![image.png](./assets/1653878795730-ccd6cf82-da44-4ec5-a002-c867daf68708.png)
+![image.png](_img/assets/1653878795730-ccd6cf82-da44-4ec5-a002-c867daf68708.png)
 
 **3、对IP地址连续的范围内的多台设备扫描**
 ```
 nmap 192.168.1.1-20
 ```
-![image.png](./assets/1653878805245-47480f34-0c37-4f1c-ac2d-3a296a342e19.png)
+![image.png](_img/assets/1653878805245-47480f34-0c37-4f1c-ac2d-3a296a342e19.png)
 
 **4、对整个子网的设备进行扫描**
 ```
@@ -137,22 +137,22 @@ nmap 192.168.1.0/24
 ```
 nmap -v 192.168.1.15
 ```
-![image.png](./assets/1653879786966-682593bb-0eae-4b23-9bd7-668cb5f66038.png)
+![image.png](_img/assets/1653879786966-682593bb-0eae-4b23-9bd7-668cb5f66038.png)
 
 **6、-p 参数，扫描指定范围的端口**<br />默认情况下，Nmap只会扫描1000个“最有价值的端口”，不会扫描全部的95535个TCP或UDP端口。若需要全面检测端口，则需要加入`- p 65535` 或者 `-p-`
-![image.png](./assets/1653879796214-d41ab190-436d-4e77-8485-f98c8a014d89.png)
+![image.png](_img/assets/1653879796214-d41ab190-436d-4e77-8485-f98c8a014d89.png)
 
 **7、-O 参数，扫描目标服务器的操作系统类型**
 ```
 nmap -O 192.168.1.15
 ```
-![image.png](./assets/1653879807170-92e5815c-ad8c-49b0-95b5-5e39931ba451.png)
+![image.png](_img/assets/1653879807170-92e5815c-ad8c-49b0-95b5-5e39931ba451.png)
 
 **8、-A 参数，扫描所有信息**
 ```
 nmap -A 192.168.1.15
 ```
-![image.png](./assets/1653879818282-9b34dace-8794-4102-a734-26838f64162c.png)
+![image.png](_img/assets/1653879818282-9b34dace-8794-4102-a734-26838f64162c.png)
 
 
 ## TCP连接扫描
@@ -160,10 +160,10 @@ Nmap使用 -sT 参数来进行Connect扫描（TCP连接扫描）。Connect扫描
 ```
 nmap -sT -p 80 192.168.1.15
 ```
-![image.png](./assets/1653879826381-8f1ac7d5-7c08-4d10-815c-a603fa290ade.png)
+![image.png](_img/assets/1653879826381-8f1ac7d5-7c08-4d10-815c-a603fa290ade.png)
 
 wireshark抓包如图
-![image.png](./assets/1653879836030-54a22082-6500-4c85-bb26-366ae973f0bc.png)
+![image.png](_img/assets/1653879836030-54a22082-6500-4c85-bb26-366ae973f0bc.png)
 
 
 ## ACK扫描
@@ -171,10 +171,10 @@ Nmap使用 -sA 参数来进行ACK扫描。首先向目标主机发送连接请�
 ```
 nmap -sA -p 80 6666 192.168.1.15
 ```
-![image.png](./assets/1653879845571-95d007d3-26c1-4a20-a1e8-81131eb5b55e.png)
+![image.png](_img/assets/1653879845571-95d007d3-26c1-4a20-a1e8-81131eb5b55e.png)
 
 wireshark抓包如图
-![image.png](./assets/1653879854920-f27ccf41-1ae7-4b5a-a738-f65338fcfc65.png)
+![image.png](_img/assets/1653879854920-f27ccf41-1ae7-4b5a-a738-f65338fcfc65.png)
 
 
 ## SYN扫描
@@ -182,10 +182,10 @@ Nmap使用 -sS 参数来进行SYN扫描。SYN扫描是较为流行的一种扫�
 ```
 nmap -sS -p 80 192.168.1.15
 ```
-![image.png](./assets/1653879863044-cd974497-3b28-40d4-92e0-95257e0fca02.png)
+![image.png](_img/assets/1653879863044-cd974497-3b28-40d4-92e0-95257e0fca02.png)
 
 wireshark抓包如图
-![image.png](./assets/1653879872065-165e0fef-213e-4338-bcc3-81aabb500b05.png)
+![image.png](_img/assets/1653879872065-165e0fef-213e-4338-bcc3-81aabb500b05.png)
 
 
 ## FIN扫描
@@ -193,10 +193,10 @@ Nmap使用 -sF 参数来进行FIN扫描。源主机A向目标主机B发送FIN数
 ```
 nmap -sF -p 80 6666 192.168.1.15
 ```
-![image.png](./assets/1653879881534-a90084b3-dd23-4eb3-a5cb-9ad952b2f4cf.png)
+![image.png](_img/assets/1653879881534-a90084b3-dd23-4eb3-a5cb-9ad952b2f4cf.png)
 
 wireshark抓包如图
-![image.png](./assets/1653879890988-58afdc23-9eb5-4667-99b9-976966c15d44.png)
+![image.png](_img/assets/1653879890988-58afdc23-9eb5-4667-99b9-976966c15d44.png)
 
 
 ## UDP扫描
@@ -204,10 +204,10 @@ Nmap的SYN扫描和完整的TCP扫描都不能扫描UDP端口。因为UDP协议�
 ```
 nmap -sU -p 80 192.168.1.15
 ```
-![image.png](./assets/1653879901594-8f23ac5b-4895-4c98-827c-0ed02ab1e249.png)
+![image.png](_img/assets/1653879901594-8f23ac5b-4895-4c98-827c-0ed02ab1e249.png)
 
 wireshark抓包如图
-![image.png](./assets/1653879910903-5f21bdfb-8355-4a5b-9ae3-4265c67688f3.png)
+![image.png](_img/assets/1653879910903-5f21bdfb-8355-4a5b-9ae3-4265c67688f3.png)
 
 
 # 利用Nmap扫描目标系统
@@ -215,7 +215,7 @@ wireshark抓包如图
 ```
 nmap -O --osscan-limit 192.168.1.15
 ```
-![image.png](./assets/1653879920392-ba843fe4-4686-4004-82e9-afb2c9129913.png)
+![image.png](_img/assets/1653879920392-ba843fe4-4686-4004-82e9-afb2c9129913.png)
 
 --osscan-guess 参数，只对满足“具有打开和关闭的端口”条件的设备进行操作系统扫描
 ```
@@ -229,7 +229,7 @@ nmap -O --osscan-guess 192.168.1.15
 ```
 nmap -sV 192.168.1.15
 ```
-![image.png](./assets/1653879932023-0b8be439-3a52-4376-9a53-ef159abfeafc.png)
+![image.png](_img/assets/1653879932023-0b8be439-3a52-4376-9a53-ef159abfeafc.png)
 
 
 # 保存扫描结果为xml
@@ -237,7 +237,7 @@ nmap -sV 192.168.1.15
 ```
 nmap -oX /root/test.xml 192.168.1.15
 ```
-![image.png](./assets/1653879943343-52646ff2-e4c7-4df3-b1b2-e1d022d5be63.png)
+![image.png](_img/assets/1653879943343-52646ff2-e4c7-4df3-b1b2-e1d022d5be63.png)
 
 
 # Nmap扫描扩展
@@ -245,7 +245,7 @@ nmap -oX /root/test.xml 192.168.1.15
 ```
 nmap --randomize-hosts 192.168.1.1-20
 ```
-![image.png](./assets/1653879952248-bc6d0a6d-d0b3-4245-bda2-85ad1300fee1.png)
+![image.png](_img/assets/1653879952248-bc6d0a6d-d0b3-4245-bda2-85ad1300fee1.png)
 
 **2、--scan-delay 延时扫描（单位：秒）**
 ```
@@ -268,13 +268,13 @@ nmap --script XXX.nse  XXXXX.com
 ```
 /usr/share/namp/sceipt
 ```
-![image.png](./assets/1653879967055-ce2315b2-fd14-4b0a-9db2-9a4432b99640.png)
+![image.png](_img/assets/1653879967055-ce2315b2-fd14-4b0a-9db2-9a4432b99640.png)
 
 **windows中Nmap脚本路径**
 ```
 \Nmap\scripts
 ```
-![image.png](./assets/1653879976163-6a9dd8c7-5051-4120-898c-8a679e0a0a33.png)
+![image.png](_img/assets/1653879976163-6a9dd8c7-5051-4120-898c-8a679e0a0a33.png)
 
 **1、IP地址信息收集**
 ```
@@ -324,5 +324,5 @@ namp --script all 192.168.1.15
 
 
 # Nmap命令详解
-![Nmap.png](./assets/1653880063999-73672a81-a504-4341-94f3-16c83076eab1.png)
+![Nmap.png](_img/assets/1653880063999-73672a81-a504-4341-94f3-16c83076eab1.png)
 

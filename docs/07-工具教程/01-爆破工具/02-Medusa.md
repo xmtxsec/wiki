@@ -6,7 +6,7 @@ Medusa是支持AFP, CVS, FTP, HTTP, IMAP, MS-SQL, MySQL, NCP (NetWare),NNTP,PcAn
 
 
 # 0x02命令说明
-![image.png](./assets/1655794894190-bfd29b35-4b6d-41b6-ab0a-ff52e2b28b16.png)
+![image.png](_img/assets/1655794894190-bfd29b35-4b6d-41b6-ab0a-ff52e2b28b16.png)
 ```
 -h [TEXT]      目标IP
 -H [FILE]      目标主机文件
@@ -47,5 +47,5 @@ medusa -M ssh -h 192.168.1.9 -u flag4 -P /usr/share/john/password.lst -e ns -f
 - -e ns 进行空密码和密码与用户名相同的扫描
 - -f在任何主机上找到第一个账号/密码后，停止破解
 
-![image.png](./assets/1655794906962-c473da61-d0f2-4143-a208-51228db6bbc2.png)
-![image.png](./assets/1655794911585-48b52c63-ac0a-4095-ab77-611d75a7f844.png)
+![image.png](_img/assets/1655794906962-c473da61-d0f2-4143-a208-51228db6bbc2.png)
+![image.png](_img/assets/1655794911585-48b52c63-ac0a-4095-ab77-611d75a7f844.png)

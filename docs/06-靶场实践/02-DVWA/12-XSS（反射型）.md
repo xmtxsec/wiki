@@ -24,7 +24,7 @@ if( array_key_exists( "name", $_GET ) && $_GET[ 'name' ] != NULL ) {
 ```
 <script>alert("XMTX")</script>
 ```
-![image-20210416145651838.png](./assets/1655880402631-b06e9492-c43b-4ccd-9363-80b3e9f8ee90.png)
+![image-20210416145651838.png](_img/assets/1655880402631-b06e9492-c43b-4ccd-9363-80b3e9f8ee90.png)
 
 
 ## 2、Medium
@@ -76,7 +76,7 @@ echo "Replacements: $i";
 ```
 <sCrIpt>alert("XMTX")</ScRipt>
 ```
-![image-20210416150353296.png](./assets/1655880415257-810f12cf-0689-40a9-91d1-6ea684b5d8e0.png)
+![image-20210416150353296.png](_img/assets/1655880415257-810f12cf-0689-40a9-91d1-6ea684b5d8e0.png)
 
 
 ## 3、High
@@ -125,7 +125,7 @@ $count: 可选，为替换执行的次数。
 ```
 <img src=1 onerror=alert("XMTX")>
 ```
-![image-20210416150755422.png](./assets/1655880433204-d5fc13ac-8f9f-480d-96cd-fe65e9fafdf1.png)
+![image-20210416150755422.png](_img/assets/1655880433204-d5fc13ac-8f9f-480d-96cd-fe65e9fafdf1.png)
 
 
 ## 4、Impossible

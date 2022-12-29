@@ -36,7 +36,7 @@ docker exec -it mysql /bin/bash
 - flush privileges;
 - exit;
 ```
-![image.png](./assets/1655796540454-867d0686-ec13-4d54-96ad-da9c2d43a621.png)
+![image.png](_img/assets/1655796540454-867d0686-ec13-4d54-96ad-da9c2d43a621.png)
 
 启动nextcloud镜像
 ```
@@ -49,7 +49,7 @@ http://youip
 ```
 
 如下配置
-![image.png](./assets/1655796551677-d4fe6526-ee83-4d45-ba77-f6c8bb57b276.png)
+![image.png](_img/assets/1655796551677-d4fe6526-ee83-4d45-ba77-f6c8bb57b276.png)
 
 等待一段时间后即搭建成功
-![image.png](./assets/1655796560330-cf8fcea2-0d70-4bf1-9738-e864cb28a898.png)
+![image.png](_img/assets/1655796560330-cf8fcea2-0d70-4bf1-9738-e864cb28a898.png)

@@ -9,7 +9,7 @@ flag就在题目中，按照flag的格式找出提交即可。
 
 # 3、Vape Nation
 将得到的图片下载，使用StegSolve工具打开依次翻阅即可看到flag
-![image.png](./assets/1655864730728-48a60e8e-c75c-40cb-b74d-b212d7f71569.png)
+![image.png](_img/assets/1655864730728-48a60e8e-c75c-40cb-b74d-b212d7f71569.png)
 
 
 # 4、签到题
@@ -30,7 +30,7 @@ flag就在题目中，按照flag的格式找出提交即可。
 
 # 8、challenge
 得到题目没有思路，猜想是进制转换，经过尝试为十六进制转换.
-![image.png](./assets/1655864744063-d87abae8-dd59-4ada-b664-d2c0a5eb2b37.png)
+![image.png](_img/assets/1655864744063-d87abae8-dd59-4ada-b664-d2c0a5eb2b37.png)
 
 
 # 9、传说中的签到题
@@ -129,10 +129,10 @@ if __name__ =='__main__':
 
 # 16、小可爱
 看到题目的提示“txt文件内容即为密码”，密码？什么东西需要密码呢？压缩包解压需要密码，那么该文件可能实际上是一个压缩包，将后缀改为zip进行解密发现需要密码，使用Ziperello破解得到密码
-![image.png](./assets/1655864765357-c3bc06bb-5069-4378-b707-d9cab8890021.png)
+![image.png](_img/assets/1655864765357-c3bc06bb-5069-4378-b707-d9cab8890021.png)
 
 解压后得到一张破碎的二维码图片。将二维码拼接扫码即得到flag。
-![image.png](./assets/1655864773551-2f1fa90d-e678-48b4-aa3b-7d3e955f5037.png)
+![image.png](_img/assets/1655864773551-2f1fa90d-e678-48b4-aa3b-7d3e955f5037.png)
 
 
 # 17、签到题
@@ -149,12 +149,12 @@ flag就在题目中，提交即可。
 
 # 20、山岚
 题目就给了一段密文，很明显解密即是flag。题目名字“山岚”谐音“栅栏”，使用[栅栏密码](http://ctf.ssleye.com/railfence.html)解密或者使用CTFcrackTools.jar工具解密即可得到flag。
-![image.png](./assets/1655864785631-09d0e219-2128-443f-bdb5-99c927ede43e.png)
+![image.png](_img/assets/1655864785631-09d0e219-2128-443f-bdb5-99c927ede43e.png)
 
 
 # 21、签到题2
 看题目大致可知为unicode加密，使用CTFcrackTools.jar工具解密即可。
-![image.png](./assets/1655864791692-7efec6b7-5036-42c3-80fd-6ad179493610.png)
+![image.png](_img/assets/1655864791692-7efec6b7-5036-42c3-80fd-6ad179493610.png)
 
 
 # 22、xx
@@ -241,7 +241,7 @@ flag{百度杯之让红包飞}
 
 # 41、misc 3 此去经年
 将题目中给的base64解密进行提交发现是失败，百度一下这首诗
-![image.png](./assets/1655864823222-cc197604-0fc6-4569-9483-970ace701ad4.png)
+![image.png](_img/assets/1655864823222-cc197604-0fc6-4569-9483-970ace701ad4.png)
 “十月蟋蟀入我床下”即是flag。
 
 

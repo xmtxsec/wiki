@@ -14,37 +14,37 @@ Wireshark（前称Ethereal）是一个网络封包分析软件。网络封包分
 
 # 使用wireshark抓包
 1、启动wirehark
-![image.png](./assets/1655877929346-f9656692-726b-4797-9094-399cbb4229f7.png)
+![image.png](_img/assets/1655877929346-f9656692-726b-4797-9094-399cbb4229f7.png)
 
 2、选择网卡
-![image.png](./assets/1655877936810-4d18d673-2075-4ba5-b711-510f0566d65b.png)
+![image.png](_img/assets/1655877936810-4d18d673-2075-4ba5-b711-510f0566d65b.png)
 
 3、双击网卡后就会自动进行抓包
-![image.png](./assets/1655877944033-2935206e-21ea-4af2-bfed-0c62508d045c.png)
+![image.png](_img/assets/1655877944033-2935206e-21ea-4af2-bfed-0c62508d045c.png)
 
 
 # 混杂模式
 **混杂模式概述：**混杂模式就是接收所有经过网卡的数据包,包括不是发给本机的包, 即不验证MAC地址。普通模式下网卡只接收发给本机的包(包括广播包)传递给上层程序,其它的包一律丢弃。一般来说， 混杂模式不会影响网卡的正常工作,多在网络监听工具上使用。
 
 **关闭和开启混杂模式方法**<br />关闭和开启混杂模式前,需要停止当前抓包,如果当前正在抓包的过程中,点击”停止捕获”
-![image.png](./assets/1655877952981-9b9a38d9-cd2f-43ef-aa6f-64dc7c837428.png)
+![image.png](_img/assets/1655877952981-9b9a38d9-cd2f-43ef-aa6f-64dc7c837428.png)
 
-![image.png](./assets/1655877958606-4a90f6b2-5a12-4321-90f5-d8c2ea2a4135.png)
+![image.png](_img/assets/1655877958606-4a90f6b2-5a12-4321-90f5-d8c2ea2a4135.png)
 
 
 # 过滤器的使用
 
 ## 筛选TCP的数据包
 注意：筛选条件使用小写了，大写会无法识别。
-![image.png](./assets/1655877971040-c42ce70a-8137-484c-bff6-b7f47531c48d.png)
+![image.png](_img/assets/1655877971040-c42ce70a-8137-484c-bff6-b7f47531c48d.png)
 
 
 ## 筛选ARP的数据包
-![image.png](./assets/1655877978329-2cd80548-15c3-46ba-82a6-226520bf7df8.png)
+![image.png](_img/assets/1655877978329-2cd80548-15c3-46ba-82a6-226520bf7df8.png)
 
 
 ## 筛选UDP的数据包
-![image.png](./assets/1655877985064-6a4824ae-1095-4daa-9154-eb7a2e922317.png)
+![image.png](_img/assets/1655877985064-6a4824ae-1095-4daa-9154-eb7a2e922317.png)
 
 **以此类推，筛选什么数据包就输入什么协议。**
 
@@ -64,24 +64,24 @@ ip.src_host == 192.168.1.37 or ip.src_host == 192.168.1.15
 ```
 ip.src_host == 192.168.1.37
 ```
-![image.png](./assets/1655878001944-87840cc7-158d-4c31-aa39-37b1cef7f94a.png)
+![image.png](_img/assets/1655878001944-87840cc7-158d-4c31-aa39-37b1cef7f94a.png)
 
 **2、依据目标地址筛选**
 ```
 ip.dst_host == 192.1678.1.15
 ```
-![image.png](./assets/1655878011227-63e395e5-2425-4c46-908c-ffc22d60c0f5.png)
+![image.png](_img/assets/1655878011227-63e395e5-2425-4c46-908c-ffc22d60c0f5.png)
 
 
 # 数据包分析
 
 ## ARP协议
-![image.png](./assets/1655878028856-1e29e26b-a3b2-4bfa-8a9a-3938e958389a.png)
+![image.png](_img/assets/1655878028856-1e29e26b-a3b2-4bfa-8a9a-3938e958389a.png)
 
 
 ### 第一个数据包（请求包）
 有三层结构
-![image.png](./assets/1655878038036-479d8b7b-a554-45e8-8410-d9a7b62c4501.png)
+![image.png](_img/assets/1655878038036-479d8b7b-a554-45e8-8410-d9a7b62c4501.png)
 
 
 #### 第一层
@@ -89,16 +89,16 @@ Frame 2 前面的2 表示第几个包。
 
 
 #### 第二层
-![image.png](./assets/1655878073018-61b9c4e7-75d8-4666-bc45-90ce8ff9f412.png)
+![image.png](_img/assets/1655878073018-61b9c4e7-75d8-4666-bc45-90ce8ff9f412.png)
 
 
 #### 第三层
-![image.png](./assets/1655878079888-58b0eb1a-443a-42f6-bd2a-2c7242f0058d.png)
+![image.png](_img/assets/1655878079888-58b0eb1a-443a-42f6-bd2a-2c7242f0058d.png)
 
 
 ### 第二个数据包（回应包）
 有三层结构
-![image.png](./assets/1655878091654-13c2660b-ce0d-42b9-b22a-496e52a54833.png)
+![image.png](_img/assets/1655878091654-13c2660b-ce0d-42b9-b22a-496e52a54833.png)
 
 
 #### 第一层
@@ -106,85 +106,85 @@ Fram 3 前面的3 表示第几个包。
 
 
 #### 第二层
-![image.png](./assets/1655878100664-d15fec7d-411b-4706-9aa5-9cc0c5315945.png)
+![image.png](_img/assets/1655878100664-d15fec7d-411b-4706-9aa5-9cc0c5315945.png)
 
 
 #### 第三层
-![image.png](./assets/1655878107480-08b0ed71-aa3f-4190-8c15-ebab5891a067.png)
+![image.png](_img/assets/1655878107480-08b0ed71-aa3f-4190-8c15-ebab5891a067.png)
 
 
 ## ICMP协议
-![image.png](./assets/1655878115970-689c11db-c36c-44b6-b62f-e0e4fc6da3c7.png)
+![image.png](_img/assets/1655878115970-689c11db-c36c-44b6-b62f-e0e4fc6da3c7.png)
 
 
 ### 第一个数据包（请求包）
 有四层结构
-![image.png](./assets/1655878131363-5fe9e05e-ebcf-4d63-9190-e0d13f0c045b.png)
+![image.png](_img/assets/1655878131363-5fe9e05e-ebcf-4d63-9190-e0d13f0c045b.png)
 
 
 #### 第一层
-![image-20211022140918843.png](./assets/1655878181743-2445a5ec-f357-4b9b-97f7-4f0bad5070a7.png)
+![image-20211022140918843.png](_img/assets/1655878181743-2445a5ec-f357-4b9b-97f7-4f0bad5070a7.png)
 关注的信息般在第一行就显示出来了, 98节784比特和网络接口信息。
 
 
 #### 第二层
-![image-20211022141056347.png](./assets/1655878192160-30cfee3e-b3f7-4f00-87ae-446e09cad6e2.png)
+![image-20211022141056347.png](_img/assets/1655878192160-30cfee3e-b3f7-4f00-87ae-446e09cad6e2.png)
 
 
 #### 第三层
-![image-20211022141613381.png](./assets/1655878195961-817475ae-ee51-48c3-8e57-9108cc62b037.png)
+![image-20211022141613381.png](_img/assets/1655878195961-817475ae-ee51-48c3-8e57-9108cc62b037.png)
 
 
 #### 第四层
-![image-20211022142317871.png](./assets/1655878201377-c41aa10e-27d0-48b9-981a-1e0a4df6b5b6.png)
+![image-20211022142317871.png](_img/assets/1655878201377-c41aa10e-27d0-48b9-981a-1e0a4df6b5b6.png)
 
 
 ### 第二个数据包（返回包）
-前三层和上面是一样的，这里主要分析第四层<br />![image-20211022142636788.png](./assets/1655878207846-247283ca-b701-471a-b3ce-661bb210dd4f.png)
+前三层和上面是一样的，这里主要分析第四层<br />![image-20211022142636788.png](_img/assets/1655878207846-247283ca-b701-471a-b3ce-661bb210dd4f.png)
 
 
 #### 第四层
-![image-20211022142931275.png](./assets/1655878212560-2d8a6c1e-a987-4e87-8e30-1cf3a29a5b78.png)
+![image-20211022142931275.png](_img/assets/1655878212560-2d8a6c1e-a987-4e87-8e30-1cf3a29a5b78.png)
 
 
 ## TCP协议
-![image-20211022144003543.png](./assets/1655878218106-df8b31ed-73ba-465b-a50e-a971a24a2e22.png)
+![image-20211022144003543.png](_img/assets/1655878218106-df8b31ed-73ba-465b-a50e-a971a24a2e22.png)
 
 ### 第一个数据包（SYN）
-![image-20211022144125776.png](./assets/1655878225275-048293d2-53ae-4c6b-a7df-d4f4784a0915.png)
+![image-20211022144125776.png](_img/assets/1655878225275-048293d2-53ae-4c6b-a7df-d4f4784a0915.png)
 前三层和ICMP是一样的，这里主要分析第四层
 
 
 #### 第四层
-![image-20211022144514275.png](./assets/1655878232297-1e58c355-987e-49e0-8d73-902ba871b1ce.png)
+![image-20211022144514275.png](_img/assets/1655878232297-1e58c355-987e-49e0-8d73-902ba871b1ce.png)
 
-**标志位的详细信息**<br />![image-20211022144653693.png](./assets/1655878241094-45ac2a5e-89d0-4155-86c5-4aee0fe62f3f.png)
+**标志位的详细信息**<br />![image-20211022144653693.png](_img/assets/1655878241094-45ac2a5e-89d0-4155-86c5-4aee0fe62f3f.png)
 
 ### 第二个数据包（SYN|ACK）
-![image-20211022144754245.png](./assets/1655878248153-98cf2252-c6d6-4fe9-b472-ce8aeb3dae77.png)
+![image-20211022144754245.png](_img/assets/1655878248153-98cf2252-c6d6-4fe9-b472-ce8aeb3dae77.png)
 前三层和ICMP是一样的，这里主要分析第四层
 
 
 #### 第四层
-![image-20211022145142061.png](./assets/1655878254207-771dabf8-f8bf-4c80-97b5-8c15527476b4.png)
+![image-20211022145142061.png](_img/assets/1655878254207-771dabf8-f8bf-4c80-97b5-8c15527476b4.png)
 
-**标志位的详细信息**<br />![image-20211022145318456.png](./assets/1655878256645-825d67e7-5a8f-4711-8978-ad75896066e7.png)
-![image-20211022145435362.png](./assets/1655878266901-337a9255-957e-47e5-92d6-d1f6184ce60b.png)
+**标志位的详细信息**<br />![image-20211022145318456.png](_img/assets/1655878256645-825d67e7-5a8f-4711-8978-ad75896066e7.png)
+![image-20211022145435362.png](_img/assets/1655878266901-337a9255-957e-47e5-92d6-d1f6184ce60b.png)
 
 
 ### 第三个数据包（ACK）
-![image-20211022145524769.png](./assets/1655878272011-a34433b1-6cbd-428a-9b63-cc0b802079c4.png)
+![image-20211022145524769.png](_img/assets/1655878272011-a34433b1-6cbd-428a-9b63-cc0b802079c4.png)
 前三层和ICMP是一样的，这里主要分析第四层
 
 
 #### 第四层
-![image-20211022145848503.png](./assets/1655878277086-52ea07a0-b1d7-4cd3-b6c5-1f7c9e442c3b.png)
+![image-20211022145848503.png](_img/assets/1655878277086-52ea07a0-b1d7-4cd3-b6c5-1f7c9e442c3b.png)
 
-**标志位的详细信息**<br />![image-20211022145959969.png](./assets/1655878282015-33e52f9d-7fd9-46a6-abdc-cee4369bd0d4.png)
-![image-20211022150033755.png](./assets/1655878283781-e2cc256e-3e4d-4b84-bfe6-dbb0f0b4d665.png)
+**标志位的详细信息**<br />![image-20211022145959969.png](_img/assets/1655878282015-33e52f9d-7fd9-46a6-abdc-cee4369bd0d4.png)
+![image-20211022150033755.png](_img/assets/1655878283781-e2cc256e-3e4d-4b84-bfe6-dbb0f0b4d665.png)
 
 ## HTTP协议
-![image-20211022150442549.png](./assets/1655878294384-59f5078b-ac51-45df-b856-a30e7b3b5013.png)
+![image-20211022150442549.png](_img/assets/1655878294384-59f5078b-ac51-45df-b856-a30e7b3b5013.png)
 
 1. 我们发送了一个HTTP的HEAD请求
 2. 服务器收到我们的请求返回了SEQ/ACK进行确认
@@ -194,25 +194,25 @@ Fram 3 前面的3 表示第几个包。
 
 
 ## DNS协议
-![image-20211022150747290.png](./assets/1655878298539-760e3bec-081c-43e4-a8e4-17a8a02986ba.png)
+![image-20211022150747290.png](_img/assets/1655878298539-760e3bec-081c-43e4-a8e4-17a8a02986ba.png)
 
 
 ### 第一个数据包
-![image-20211022150850640.png](./assets/1655878302954-3ad2d2a9-bc75-4a05-8cde-ccee1a9d3804.png)
+![image-20211022150850640.png](_img/assets/1655878302954-3ad2d2a9-bc75-4a05-8cde-ccee1a9d3804.png)
 可以看到这是一个5层的协议包它的4层协议是UDP
 
 
 #### 第四层（UDP）
-![image-20211022151326774.png](./assets/1655878309055-092da224-9cfa-4b79-bd6f-ef3968afbdf5.png)
+![image-20211022151326774.png](_img/assets/1655878309055-092da224-9cfa-4b79-bd6f-ef3968afbdf5.png)
 
 #### 第五层（DNS）
-![image-20211022151740799.png](./assets/1655878314791-20f0135f-99ea-4ab5-9fb8-dadaabd61246.png)
+![image-20211022151740799.png](_img/assets/1655878314791-20f0135f-99ea-4ab5-9fb8-dadaabd61246.png)
 
 
 ### 第三个数据包
-![image-20211022151944070.png](./assets/1655878319784-e91f99c3-985e-4dc4-b478-374446fbb6c6.png)
+![image-20211022151944070.png](_img/assets/1655878319784-e91f99c3-985e-4dc4-b478-374446fbb6c6.png)
 因为我们上面提示应答我们的是第 3 个数据包
 
 
 #### 第五层（DNS）
-![image-20211022152302074.png](./assets/1655878326861-1b08fb4a-cbb6-4541-8014-f9b13d33341c.png)
+![image-20211022152302074.png](_img/assets/1655878326861-1b08fb4a-cbb6-4541-8014-f9b13d33341c.png)

@@ -80,5 +80,5 @@ if(isset($_POST['o'])){
 ```
 O:1:"S":1:{s:4:"test";s:30:"<script>alert('XMTX')</script>";}
 ```
-![image-20210715150947808.png](./assets/1655881436365-b70b3bed-5f5a-4880-9937-5aeea55fd589.png)
+![image-20210715150947808.png](_img/assets/1655881436365-b70b3bed-5f5a-4880-9937-5aeea55fd589.png)
 

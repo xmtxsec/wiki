@@ -18,7 +18,7 @@
 http://127.0.0.1/dvwa/vulnerabilities/xss_d/?default=<script>alert("XMTX")</script>
 ```
 
-成功弹窗<br />![image-20210416142238350.png](./assets/1655880301325-141cec2c-742a-4c00-882a-e1770bb838a5.png)
+成功弹窗<br />![image-20210416142238350.png](_img/assets/1655880301325-141cec2c-742a-4c00-882a-e1770bb838a5.png)
 
 
 ## 2、Medium
@@ -62,13 +62,13 @@ http://127.0.0.1/dvwa/vulnerabilities/xss_d/?default=<img src=1 onerror=alert("X
 
 可是没有任何弹窗。
 
-查看前端代码<br />![image-20210416143433774.png](./assets/1655880321239-bc7a45a3-a1d6-444c-b3b4-52053bbe98bc.png)
+查看前端代码<br />![image-20210416143433774.png](_img/assets/1655880321239-bc7a45a3-a1d6-444c-b3b4-52053bbe98bc.png)
 
 可以看到是因为包含在`<option>`和`<select>`中我们将其闭合即可，构造payload:
 ```
 127.0.0.1/dvwa/vulnerabilities/xss_d/?default=</option></select><img src=1 onerror=alert("XMTX")>
 ```
-![image-20210416143527562.png](./assets/1655880327440-b0c07f60-f48c-4d62-836b-adda6801abe5.png)
+![image-20210416143527562.png](_img/assets/1655880327440-b0c07f60-f48c-4d62-836b-adda6801abe5.png)
 
 
 ## 3、High
@@ -105,7 +105,7 @@ if ( array_key_exists( "default", $_GET ) && !is_null ($_GET[ 'default' ]) ) {
 ```
 http://127.0.0.1/dvwa/vulnerabilities/xss_d/?#default=<script>alert("XMTX")</script>
 ```
-![image-20210416144000373.png](./assets/1655880341205-bc12a435-420d-4805-9606-073d18ea6fa7.png)
+![image-20210416144000373.png](_img/assets/1655880341205-bc12a435-420d-4805-9606-073d18ea6fa7.png)
 
 
 ## 4、Impossible

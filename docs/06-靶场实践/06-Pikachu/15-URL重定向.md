@@ -44,9 +44,9 @@ http_response_code	可选。把 HTTP 响应代码强制为指定的值。（PHP 
 
 
 ## 实战
-点击页面的最后一个“ 我就是我,放荡不羁的我”即可看到跳转的URL<br />![image-20210715154001115.png](./assets/1655881284785-8ab426af-1584-4017-bdb8-d26847eba6cd.png)
+点击页面的最后一个“ 我就是我,放荡不羁的我”即可看到跳转的URL<br />![image-20210715154001115.png](_img/assets/1655881284785-8ab426af-1584-4017-bdb8-d26847eba6cd.png)
 
-将URL中的i改为我们想要跳转的网站，即可跳转<br />![image-20210715154110329.png](./assets/1655881296734-fd8dc924-fcf7-452c-ac7b-8d470d1ed144.png)
-![image-20210715154125491.png](./assets/1655881289475-cbf9f525-5430-47d5-8db3-2f0fc0dbe8bc.png)
+将URL中的i改为我们想要跳转的网站，即可跳转<br />![image-20210715154110329.png](_img/assets/1655881296734-fd8dc924-fcf7-452c-ac7b-8d470d1ed144.png)
+![image-20210715154125491.png](_img/assets/1655881289475-cbf9f525-5430-47d5-8db3-2f0fc0dbe8bc.png)
 
 

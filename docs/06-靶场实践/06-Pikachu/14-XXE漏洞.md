@@ -59,4 +59,4 @@ if(isset($_POST['submit']) and $_POST['xml'] != null){
 ]>
 <x>&XMTX;</x>
 ```
-![image-20210715152910525.png](./assets/1655881363832-a1066b59-2df0-4d26-aea1-9da25c6a5d4a.png)
+![image-20210715152910525.png](_img/assets/1655881363832-a1066b59-2df0-4d26-aea1-9da25c6a5d4a.png)

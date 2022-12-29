@@ -1,13 +1,13 @@
 
 # GFSJ0162-Training-WWW-Robots
 **题目：**<br />在这个小小的训练挑战中，您将了解[Robots_exclusion_standard](http://en.wikipedia.org/wiki/Robots_exclusion_standard)。<br />网络爬虫使用 robots.txt 文件来检查是否允许他们对您的网站或仅部分网站进行爬网和索引。<br />有时这些文件会显示目录结构，而不是保护内容不被抓取。<br />享受！
-![image.png](./assets/1657530295867-69f6eea5-330a-4094-8f99-3bfee819b6a7.png)
+![image.png](_img/assets/1657530295867-69f6eea5-330a-4094-8f99-3bfee819b6a7.png)
 
 **解答：**<br />在题目中提到了[robots.txt](https://baike.baidu.com/item/robots%E5%8D%8F%E8%AE%AE/2483797?fromtitle=robots.txt&fromid=9518761&fr=aladdin)
 robots协议也称爬虫协议、爬虫规则等,是指网站可建立一个robots.txt文件来告诉搜索引擎哪些页面可以抓取,哪些页面不能抓取,而搜索引擎则通过读取robots.txt文件来识别这个页面是否允许被抓取。但是,这个robots协议不是防火墙,也没有强制执行力,搜索引擎完全可以忽视robots.txt文件去抓取网页的快照。如果想单独定义搜索引擎的漫游器访问子目录时的行为，那么可以将自定的设置合并到根目录下的robots.txt，或者使用robots[元数据](https://baike.baidu.com/item/%E5%85%83%E6%95%B0%E6%8D%AE)（Metadata，又称元数据）。
 
 访问robots.txt文件<br />http://61.147.171.105:51401/robots.txt
-![image.png](./assets/1657530312306-db8cd6cb-3d49-4aeb-a831-135d443bcbab.png)
+![image.png](_img/assets/1657530312306-db8cd6cb-3d49-4aeb-a831-135d443bcbab.png)
 
 在robots.txt文件中看到了fl0g.php，尝试访问。<br />http://61.147.171.105:51401/fl0g.php
 

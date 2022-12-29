@@ -53,7 +53,7 @@ source /etc/profile.d/maven.sh
 mvn --version
 ```
 
-![image.png](./assets/1655794551351-1dd853d7-2808-48da-8e45-6aecbb466aed.png)
+![image.png](_img/assets/1655794551351-1dd853d7-2808-48da-8e45-6aecbb466aed.png)
 
 接下来就很简单，直接下载编译好的文件即可
 
@@ -80,7 +80,7 @@ insert into test1 values (1,'zhangsan',20),(2,'lisi',18),(3,'wangwu',21);
 ```
 select * from test1;
 ```
-![image.png](./assets/1655794579575-c80e5cb3-e511-49c6-aeb6-fbeabd82277b.png)
+![image.png](_img/assets/1655794579575-c80e5cb3-e511-49c6-aeb6-fbeabd82277b.png)
 
 **在B服务器数据库中创建库和表**<br />创建一个名为test的数据库
 ```
@@ -91,7 +91,7 @@ create database test;
 ```
  create table test1(id int primary key,name text,age int);
 ```
-![image.png](./assets/1655794598780-228ce351-930b-4596-a831-3830477228dd.png)
+![image.png](_img/assets/1655794598780-228ce351-930b-4596-a831-3830477228dd.png)
 
 
 # 数据迁移
@@ -146,7 +146,7 @@ python datax.py -r postgresqlreader -w postgresqlwriter
 ```
 
 对照着github上面的项目文档来配置json文件
-![image.png](./assets/1655794627837-a02f9379-9504-489d-820d-c63c11c002ed.png)
+![image.png](_img/assets/1655794627837-a02f9379-9504-489d-820d-c63c11c002ed.png)
 
 配置json文件，每个对应的字段在官方文档中都有说明
 ```json
@@ -201,10 +201,10 @@ python datax.py ../job/test.json
 ```
 
 成功
-![image.png](./assets/1655794641368-58889edb-c11d-438e-ba5b-abc045bb4a20.png)
+![image.png](_img/assets/1655794641368-58889edb-c11d-438e-ba5b-abc045bb4a20.png)
 
 前往B服务器进行验证
-![image.png](./assets/1655794649253-98abac35-f8c5-4142-b6ca-87e811c43f81.png)
+![image.png](_img/assets/1655794649253-98abac35-f8c5-4142-b6ca-87e811c43f81.png)
 
 
 # 排错

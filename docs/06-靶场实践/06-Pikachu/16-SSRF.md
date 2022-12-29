@@ -85,9 +85,9 @@ ch   由 curl_init() 返回的 cURL 句柄。
 
 
 ## 实战
-点击页面的最后一个“ 累了吧,来读一首诗吧”即可看到改变的URL<br />![image-20210715160329917.png](./assets/1655881151767-241d0ecc-69ae-49cd-8d45-242b7615145f.png)
+点击页面的最后一个“ 累了吧,来读一首诗吧”即可看到改变的URL<br />![image-20210715160329917.png](_img/assets/1655881151767-241d0ecc-69ae-49cd-8d45-242b7615145f.png)
 
-修改URL即可跳转<br />![image-20210715160504426.png](./assets/1655881156431-d1ac8fc3-c789-4e2a-ad2a-8fea2135eddd.png)
+修改URL即可跳转<br />![image-20210715160504426.png](_img/assets/1655881156431-d1ac8fc3-c789-4e2a-ad2a-8fea2135eddd.png)
 
 
 # SSRF(file_get_content)
@@ -111,8 +111,8 @@ file_get_contents() 把整个文件读入一个字符串中。该函数是用于
 
 
 ## 实战
-点击页面的最后一个“ 反正都读了,那就在来一首吧”即可看到改变的URL<br />![image-20210715160903943.png](./assets/1655881177784-effa74c7-7b85-4eda-a657-b29a08bd9d67.png)
+点击页面的最后一个“ 反正都读了,那就在来一首吧”即可看到改变的URL<br />![image-20210715160903943.png](_img/assets/1655881177784-effa74c7-7b85-4eda-a657-b29a08bd9d67.png)
 
-修改URL查看passwd文件<br />![image-20210715160958015.png](./assets/1655881181453-8a7c311a-f253-4deb-a164-11a6d176c37d.png)
+修改URL查看passwd文件<br />![image-20210715160958015.png](_img/assets/1655881181453-8a7c311a-f253-4deb-a164-11a6d176c37d.png)
 
 到此pikachu靶场就到此结束了，emm个人感觉啊这个靶场的前面一部分还不错后面就比较鸡肋了...

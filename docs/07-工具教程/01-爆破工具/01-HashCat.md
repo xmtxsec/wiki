@@ -35,7 +35,7 @@ Hashcat 是一款用于破解密码的工具，据说是世界上最快最高级
 
 表示散列算法类型，运行hashcat 必须指明具体的散列算法，-m参数部分值如下：
 
-![img](../../docs/_img/01-HashCat/1662426289795-3bd676c3-424b-41cf-b501-4858b3730e57.png)
+![img](_img/01-HashCat/1662426289795-3bd676c3-424b-41cf-b501-4858b3730e57.png)
 
 
 
@@ -43,7 +43,7 @@ Hashcat 是一款用于破解密码的工具，据说是世界上最快最高级
 
 代表口令破解类型，常用的有straight 字典破解 和brute-force 暴力破解
 
-![img](../../docs/_img/01-HashCat/1662426426891-9ae88614-15da-43c6-9540-e11248f5544a.png)
+![img](_img/01-HashCat/1662426426891-9ae88614-15da-43c6-9540-e11248f5544a.png)
 
 
 
@@ -51,7 +51,7 @@ Hashcat 是一款用于破解密码的工具，据说是世界上最快最高级
 
 指定设备类型
 
-![img](../../docs/_img/01-HashCat/1662427000987-c347c6ad-a8f5-4a6e-a05e-760bcb7a49ff.png)
+![img](_img/01-HashCat/1662427000987-c347c6ad-a8f5-4a6e-a05e-760bcb7a49ff.png)
 
 
 
@@ -61,7 +61,7 @@ Hashcat 是一款用于破解密码的工具，据说是世界上最快最高级
 
 可以使用掩码指定密码的每一位是什么类型的字符，前提是需要知道密码有多少位
 
-![img](../../docs/_img/01-HashCat/1662426720286-cb0a9abc-9e09-4799-8c73-9d906bb46caa.png)
+![img](_img/01-HashCat/1662426720286-cb0a9abc-9e09-4799-8c73-9d906bb46caa.png)
 
 例如：`?d?d?d?d?d?d?d?d`代表密码为8位数字，`?u?l?l?l?l?d?d?d`代表密码为7位，首个字母大写，然后三个小写字母，最后三个数字
 
@@ -73,4 +73,4 @@ Hashcat 是一款用于破解密码的工具，据说是世界上最快最高级
  hashcat -a 3 -m 300 81F5E21E35407D884A6CD4A731AEBFB6AF209E1B
 ```
 
-![img](../../docs/_img/01-HashCat/1662428478739-cbfeeae2-56c0-4b4f-89c0-bfe4d6332872.png)
+![img](_img/01-HashCat/1662428478739-cbfeeae2-56c0-4b4f-89c0-bfe4d6332872.png)

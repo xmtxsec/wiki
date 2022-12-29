@@ -175,7 +175,7 @@
     * [0X07 User-Agent注入](06-靶场实践\04-Sqli-labs\08-User-Agent注入.md)
     * [0X08 Referer注入](06-靶场实践\04-Sqli-labs\09-Referer注入.md)
     * [0X09 Cookie注入](06-靶场实践\04-Sqli-labs\10-Cookie注入.md)
-    * [0X0A %00截断注入](06-靶场实践\04-Sqli-labs\11-%00截断注入.md)
+    * [0X0A %00截断注入](06-靶场实践\04-Sqli-labs\11-截断注入.md)
     * [0X0B 二次注入](06-靶场实践\04-Sqli-labs\12-二次注入.md)
     * [0X0C 宽字节注入](06-靶场实践\04-Sqli-labs\13-宽字节注入.md)
     * [0X0D 堆叠注入](06-靶场实践\04-Sqli-labs\14-堆叠注入.md)

@@ -53,51 +53,51 @@ dirb <url_base> [<wordlist_file(s)>] [options]
 ```
 dirb http://192.168.1.15
 ```
-![image.png](./assets/1655877733526-66e995a1-8d16-4840-9cb8-f4309d0b97f0.png)
+![image.png](_img/assets/1655877733526-66e995a1-8d16-4840-9cb8-f4309d0b97f0.png)
 
 ## 自定义字典扫描
 ```
 dirb http://192.168.1.15 /root/zidian.txt
 ```
-![image.png](./assets/1655877746406-2ce1c82c-4ea4-4602-b4c7-4a6ba975b920.png)
+![image.png](_img/assets/1655877746406-2ce1c82c-4ea4-4602-b4c7-4a6ba975b920.png)
 
 
 ## 设置UA
 ```
 dirb http://192.168.1.15 -a "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0"
 ```
-![image.png](./assets/1655877755225-56316d9c-ae44-44d3-a02b-eb133c64ecf0.png)
+![image.png](_img/assets/1655877755225-56316d9c-ae44-44d3-a02b-eb133c64ecf0.png)
 
 ## 设置cookie
 ```
 dirb http://192.168.1.15 -c "BAIDUID=D5C6351DAC89EF8811A51DF3A9A9C0C4:FG=1; HMACCOUNT=2906306413846532; BIDUPSID=D5C6351DAC89EF8811A51DF3A9A9C0C4; PSTM=1585744543; BDORZ=FFFB88E999055A3F8A630C64834BD6D0; H_PS_PSSID=30974_1438_31124_21098; HMVT=6bcd52f51e9b3dce32bec4a3997715ac|1587436663|; delPer=0; PSINO=6; BDRCVFR[gltLrB7qNCt]=mk3SLVN4HKm"
 ```
-![image.png](./assets/1655877776447-3917d179-4828-4db9-974a-b75078c5f483.png)
+![image.png](_img/assets/1655877776447-3917d179-4828-4db9-974a-b75078c5f483.png)
 
 
 ## 扫描指定后缀文件
 ```
 dirb http://192.168.1.15 -X .txt
 ```
-![image.png](./assets/1655877776481-efffd45c-c861-4b7b-b45d-869a0d19df91.png)
+![image.png](_img/assets/1655877776481-efffd45c-c861-4b7b-b45d-869a0d19df91.png)
 
 
 ## 延时扫描
 ```
 dirb http://192.168.1.15 -z 100
 ```
-![image.png](./assets/1655877784950-1e29cd6d-bae3-4f2f-acc9-089d2e73d5f4.png)
+![image.png](_img/assets/1655877784950-1e29cd6d-bae3-4f2f-acc9-089d2e73d5f4.png)
 
 
 ## 使用代理扫描
 ```
 dirb http://192.168.1.15 -p 127.0.0.1:54321
 ```
-![image.png](./assets/1655877800939-8a174381-eeca-4989-8ccc-00e09814462c.png)
+![image.png](_img/assets/1655877800939-8a174381-eeca-4989-8ccc-00e09814462c.png)
 
 
 ## 导出扫描结果
 ```
 dirb http://192.168.1.15 -o /root/aaa.txt
 ```
-![image.png](./assets/1655877808027-dc854415-69b2-4e16-b063-5d88531f4ae6.png)
+![image.png](_img/assets/1655877808027-dc854415-69b2-4e16-b063-5d88531f4ae6.png)

@@ -68,9 +68,9 @@ echo stripslashes("Who\'s Peter Griffin?");
 ```
 <script>alert("XMTX")</script>
 ```
-![image-20210416153535664.png](./assets/1655880491309-6893ee5f-e06b-4a9e-a1c5-4648a4adf312.png)
+![image-20210416153535664.png](_img/assets/1655880491309-6893ee5f-e06b-4a9e-a1c5-4648a4adf312.png)
 
-![image-20210416153555650.png](./assets/1655880494758-925cffe9-5726-4c37-a687-b668953cf30d.png)
+![image-20210416153555650.png](_img/assets/1655880494758-925cffe9-5726-4c37-a687-b668953cf30d.png)
 
 
 ## 2、Medium
@@ -130,15 +130,15 @@ string	必需。规定要转义的字符串。
 
 通过代码可以看到对于message参数使用addslashes()函数添加一些反斜杠，然后用strip_tags() 函数剥去字符串中的 HTML、XML 以及 PHP 的标签。最后还使用htmlspecialchars()函数将预定义字符转换成html实体，不存在XSS。对于name参数使用str_replace()函数过滤了`<script>`不过我们可以使用大小写来绕过。
 
-**实战**<br />在前端对name参数输入字符长度进行了限制，将其修改<br />![image-20210416160229069.png](./assets/1655880508064-ee3bd53f-dfa6-4023-a668-b1172c1b2f6c.png)
+**实战**<br />在前端对name参数输入字符长度进行了限制，将其修改<br />![image-20210416160229069.png](_img/assets/1655880508064-ee3bd53f-dfa6-4023-a668-b1172c1b2f6c.png)
 
 构造payload：
 ```
 <scrIpT>alert("XMTX")</ScRipt>
 ```
-![image-20210416160323660-1618564108537.png](./assets/1655880512817-61a46f57-ee06-46a3-9e8c-ba76ccd5f860.png)
+![image-20210416160323660-1618564108537.png](_img/assets/1655880512817-61a46f57-ee06-46a3-9e8c-ba76ccd5f860.png)
 
-![image-20210416160343291.png](./assets/1655880516137-5ba75ef9-352c-4bac-a43f-b41909bed70a.png)
+![image-20210416160343291.png](_img/assets/1655880516137-5ba75ef9-352c-4bac-a43f-b41909bed70a.png)
 
 
 ## 3、High
@@ -150,14 +150,14 @@ string	必需。规定要转义的字符串。
 
 通过查看源码可以看到在Medium的基础上对name参数使用了preg_replace()函数对`<script>`j进行过滤，我们可以使用其他参数。
 
-**实战**<br />在前端对name参数输入字符长度进行了限制，将其修改<br />![image-20210416160229069.png](./assets/1655880524884-cffedce3-a4e9-4fb1-a137-eb63da58f3f7.png)
+**实战**<br />在前端对name参数输入字符长度进行了限制，将其修改<br />![image-20210416160229069.png](_img/assets/1655880524884-cffedce3-a4e9-4fb1-a137-eb63da58f3f7.png)
 
 构造payload：
 ```
 <img src=1 onerror=alert("XMTX")>
 ```
-![image-20210416160814852.png](./assets/1655880529353-4087b111-6561-49ee-96c0-1de68c2e2743.png)
-![image-20210416160823006.png](./assets/1655880533258-19f43b55-46f4-4c7c-936e-780879f797d4.png)
+![image-20210416160814852.png](_img/assets/1655880529353-4087b111-6561-49ee-96c0-1de68c2e2743.png)
+![image-20210416160823006.png](_img/assets/1655880533258-19f43b55-46f4-4c7c-936e-780879f797d4.png)
 
 
 ## 4、Impossible

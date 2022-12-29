@@ -8,7 +8,7 @@ Enum4linux是用于枚举windows和Linux系统上的SMB服务的工具。可以�
 
 
 # 0X02 指令说明
-![image.png](./assets/1671780002937-6b5a0ca7-d9ed-4a70-8f74-962a416fe5ab.png)
+![image.png](_img/assets/1671780002937-6b5a0ca7-d9ed-4a70-8f74-962a416fe5ab.png)
 
 枚举命令说明
 
