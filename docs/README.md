@@ -7,4 +7,4 @@
 - 持续维护中 ing~
 
 
-![](_media/bg.png)
+![](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202212301633042.jpg)
