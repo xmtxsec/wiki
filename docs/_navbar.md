@@ -6,5 +6,4 @@
 
 * [知识星球](https://t.zsxq.com/09RBjBPUX)
 
-* 友情链接
-  * [Docsify](https://docsify.js.org/#/)
+* [乌云镜像站](http://wooyun.2xss.cc/)
