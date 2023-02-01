@@ -1,11 +1,9 @@
-
 # 新建centos虚拟机
-1、选择自定义，下一步
 
+1、选择自定义，下一步
 ![image.png](_img/02-Web安全/01-基础知识/1653891758563-76707cbb-567a-404e-a61c-d1774b63c5b3.png)
 
 2、默认，下一步
-
 ![image.png](_img/02-Web安全/01-基础知识/1653891773777-afcece0a-fc48-4662-bfc5-fb153e7ad713.png)
 
 3、选择稍后安装操作系统，下一步
@@ -43,6 +41,7 @@
 
 14、修改系统时间
 ![image.png](_img/02-Web安全/01-基础知识/1653891907149-4eeb9a7e-0c90-4f69-9e96-666b5a0b310d.png)
+
 ![image.png](_img/02-Web安全/01-基础知识/1653891922402-26d58d3f-39d2-4642-8c13-32a63dec8bcc.png)
 
 15、下一步
@@ -76,12 +75,14 @@ NETMASK=255.255.255.0
 GATEWAY=192.168.10.1
 DNS=114.114.114.114
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653891998780-2e8733b7-39e1-413e-babb-cd0d087f42f8.png)
 
 20、重启网卡
 ```
 service network restart
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892018954-3aab9d63-5a79-4a8f-9522-e5cb4f25f429.png)
 
 
@@ -110,6 +111,7 @@ yum install -y openssl openssl-devel
 ```
 wget -c https://nginx.org/download/nginx-1.20.1.tar.gz
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892056182-11df40bd-82f9-41ba-8953-41ba366c7415.png)
 
 6、解压
@@ -117,6 +119,7 @@ wget -c https://nginx.org/download/nginx-1.20.1.tar.gz
 tar -zxvf nginx-1.20.1.tar.gz
 cd nginx-1.20.1
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892066913-5348a44d-3aa8-4da7-a026-01d9c84b8c95.png)
 
 7、编译安装
@@ -125,7 +128,9 @@ cd nginx-1.20.1
 make
 make install
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892080937-c4520699-32bd-4e02-b4fb-b71765f9db96.png)
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892093041-545bc646-159a-4168-8abc-e30e24428103.png)
 
 8、启动、停止nginx
@@ -160,6 +165,7 @@ wget https://www.php.net/distributions/php-5.3.29.tar.gz
 ```
 tar -zxvf php-5.3.29.tar.gz
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892130158-b32cbc3e-1385-4a09-8d18-15748b266e11.png)
 
 
@@ -173,6 +179,7 @@ tar -zxvf php-5.3.29.tar.gz
 ```
 
 出错
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892148155-c7e19e3b-262a-472b-bdc1-328c0db2270b.png)
 
 4、重新安装libxml2和libxml2-devel包
@@ -185,11 +192,13 @@ yum install libxml2-devel
 ```
 ./configure --prefix=/usr/local/php --enable-fpm
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892162995-6e0f5f67-04bf-447a-bbf3-a3636afecb12.png)
 
 ```
 make && make install
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892176108-a3a582a6-30a7-44f0-b7cd-7fc36eac8af8.png)
 
 6、启动
@@ -199,6 +208,7 @@ mv ./etc/php-fpm.conf.default ./etc/php-fpm.conf    #重命名配置文件
 ./sbin/php-fpm   #启动
 ps -aux |grep php-fpm  #查看启动状态
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892189129-8f76716b-919c-4497-a8d5-4c12c66a476d.png)
 
 
@@ -269,18 +279,21 @@ nginx -s reload
 ```
 tar -xvf mysql-8.0.27-1.el7.x86_64.rpm-bundle.tar
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892378705-56d15df5-c181-4c7a-a2e8-f58aaea67095.png)
 
 7、安装common
 ```
  rpm -ivh mysql-community-common-8.0.27-1.el7.x86_64.rpm --nodeps --force
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892395626-aefa8986-a1a7-4989-8923-3d471c55d9ce.png)
 
 8、安装 lib
 ```
 rpm -ivh mysql-community-libs-8.0.27-1.el7.x86_64.rpm --nodeps --force
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892410298-bd5d2e5e-c1b5-45b6-a2af-d741b416bbdb.png)
 
 
@@ -288,18 +301,21 @@ rpm -ivh mysql-community-libs-8.0.27-1.el7.x86_64.rpm --nodeps --force
 ```
 rpm -ivh mysql-community-client-8.0.27-1.el7.x86_64.rpm --nodeps --force
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892421606-1d4a3cb7-ef2a-4087-b370-555e4f1d72ef.png)
 
 10、安装 server
 ```
 rpm -ivh mysql-community-server-8.0.27-1.el7.x86_64.rpm --nodeps --force
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892436103-e7c070f0-5212-4079-9a9b-f4b7fc26e3c9.png)
 
 11、查看 mysql 的安装包
 ```
 rpm -qa | grep mysql
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892448513-bcdd62cc-a97a-4a2f-849e-d95c00607eb4.png)
 
 12、初始化和相关配置
@@ -309,18 +325,21 @@ chown mysql:mysql /var/lib/mysql -R;
 systemctl start mysqld.service;
 systemctl enable mysqld;
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892465161-278fa4d0-cce8-4595-b561-ddb804474d61.png)
 
 13、查看数据库的密码
 ```
 cat /var/log/mysqld.log | grep password
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892478331-87d67181-249b-4b15-86fb-e83e97fe7c2c.png)
 
 14、进入数据库登陆界面
 ```
 mysql -uroot -p
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892495575-8e42095f-299d-4a04-88ad-6a2860bdfc4c.png)
 
 15、输入密码，进行数据库的登陆
@@ -330,6 +349,7 @@ mysql -uroot -p
 ```
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892520178-4d32c5b2-011b-42b6-a115-88b756a2013b.png)
 
 17、退出 MySQL，然后通过新密码再次登陆
@@ -341,6 +361,7 @@ create user 'root'@'%' identified with mysql_native_password by 'password';
 grant all privileges on *.* to 'root'@'%' with grant option;
 flush privileges;
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892563807-23cc7663-0533-4427-8365-dcaaa279db82.png)
 
 19、退出数据库，关闭防火墙
@@ -349,11 +370,13 @@ systemctl stop firewalld.service;
 systemctl disable firewalld.service;
 systemctl mask firewalld.service;
 ```
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892575555-e8731e08-fed3-45cc-90a2-3c0d254efa83.png)
 
 
 ## 尝试远程连接数据库
 成功
+
 ![image.png](_img/02-Web安全/01-基础知识/1653892589804-b6e45090-da86-4197-8963-e9ffcfffa48c.png)
 
 
