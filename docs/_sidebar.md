@@ -11,7 +11,7 @@
 	
 * **0X01 Linux运维**
 
-  - [0X00 安装Centos 7 虚拟机](02-Linux运维\01-安装Centos 7 虚拟机.md)
+  - [0X00 安装Centos 7 虚拟机](02-Linux运维\01-安装Centos7虚拟机.md)
 
 * **0X02 Web安全**
 	
