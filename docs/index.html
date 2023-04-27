@@ -78,6 +78,15 @@
             }
         }
     </script>
+	<script>
+		var password = "@1q2w3e4r"; // 将这个字符串替换为您想要设置的密码
+		var passwordInput = prompt("Please enter the password:");
+		if (passwordInput !== password) {
+			alert("Incorrect password, please try again.");
+			window.location.href = "about:blank"; // 如果密码不正确，将页面重定向到一个空白页
+		}
+	</script>
+
 	
     <!-- docsify的js依赖 -->
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
