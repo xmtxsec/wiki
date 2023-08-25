@@ -160,31 +160,40 @@
 
 ------
 
+**24、开启SSH服务**
 
+```
+vi etc/ssh/sshd_config
+```
 
+添加
 
+```
+permitRootLogin yes
+pubkeyAuthentication yes
+```
 
+![image-20230825204150952](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20230825204150952.png)
 
+添加后保存文件。
 
+------
 
+**25、重启服务**
 
+```
+systemctl restart ssh.service
+```
 
+![image-20230825204510665](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20230825204510665.png)
 
+------
 
+**26、远程连接**
 
+![image-20230825204634877](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20230825204634877.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
+------
 
 
 
