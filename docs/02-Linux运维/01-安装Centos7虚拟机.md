@@ -146,3 +146,81 @@
 
 ![image-20230217143303539](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202302171433592.png)
 
+
+
+# 三、换源
+
+由于CentOS 7默认的 yum 源是国外的，导致使用yum下载软件的下载速度不是很理想，这时候就需要将yum源更换成国内的源。
+
+
+
+1、备份
+
+```
+ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+```
+
+![image-20240128120930102](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20240128120930102.png)
+
+执行该命令后，`CentOS-Base.repo`文件将被重命名为`CentOS-Base.repo.backup`，并放置在相同的目录中。这样做可以为`CentOS-Base.repo`文件创建一个备份，以免不小心修改或删除该文件时丢失重要的配置。
+
+
+
+2、下载国内yum源配置文件到/etc/yum.repos.d/CentOS-Base.repo
+
+```
+阿里云 CentOS 7 源（推荐）：
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+ 
+网易163 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo
+ 
+搜狐 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.sohu.com/help/CentOS7-Base-sohu.repo
+ 
+华为云 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.myhuaweicloud.com/repo/CentOS-7.repo
+ 
+华东理工大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.ustc.edu.cn/centos/7/os/x86_64
+ 
+清华大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.tuna.tsinghua.edu.cn/centos/7/os/x86_64/
+ 
+北京理工大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.bfsu.edu.cn/centos/7/os/x86_64/
+ 
+上海交通大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://ftp.sjtu.edu.cn/centos/7/os/x86_64/
+ 
+中国科学技术大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.ustc.edu.cn/centos/7/os/x86_64/
+ 
+兰州大学 CentOS 7 源：
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirror.lzu.edu.cn/centos/7/os/x86_64/
+```
+
+以上命令选择一个就行
+
+![image-20240128121137318](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20240128121137318.png)
+
+执行该命令后，`wget`将从阿里云的源下载`CentOS-7.repo`文件，并将其保存为`CentOS-Base.repo`，放置在`/etc/yum.repos.d/`目录下。这样做可以使用阿里云作为国内的CentOS镜像源，加快软件包的下载速度。
+
+
+
+3、清理yum缓存，并生成新的缓存
+
+```
+yum clean all	#清理 YUM 缓存
+yum makecache	#重新生成 YUM 缓存
+```
+
+
+
+4、更新yum源检查是否生效
+
+```
+yum update
+```
+
+![image-20240128121319064](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20240128121319064.png)
