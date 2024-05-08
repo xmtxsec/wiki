@@ -1,4 +1,6 @@
-# **Welcome to the XMTXSEC WiKi**
+<center>
+
+# **不 驚 文 库**
 
 > 劝君莫惜金缕衣，劝君惜取少年时。
 >
@@ -6,3 +8,5 @@
 
 
 ![](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/202212301633042.jpg)
+
+</center>
