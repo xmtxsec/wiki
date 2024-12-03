@@ -195,25 +195,45 @@ systemctl restart ssh.service
 
 ------
 
+**27、换源**
 
+```
+ vi /etc/apt/sources.list
+```
 
+将下面的复制一个进去就行
 
+```
+#官方源
+deb http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
+deb-src http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware
 
+#阿里云
+deb https://mirrors.aliyun.com/kali kali-rolling main non-free contrib
+deb-src https://mirrors.aliyun.com/kali kali-rolling main non-free contrib
 
+#清华大学
+deb https://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib
+deb-src https://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib
 
+#中科大
+deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+deb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
+```
 
+![image-20241203223603408](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202412032236484.png)
 
+------
 
+28、更新软件列表(非root权限在命令行前加sudo)，时间可能较长，我这里只更新索引
 
+```
+apt-get update 更新索引
+apt-get upgrade 更新软件
+apt-get dist-upgrade 升级
+apt-get clean 删除缓存包
+apt-get autoclean 删除未安装的deb包
+```
 
-
-
-
-
-
-
-
-
-
-
+![image-20241203223853973](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202412032238036.png)
 
