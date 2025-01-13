@@ -1,0 +1,129 @@
+# 一、简介
+
+YAKIT（Yet Another Knife for IT Security）是一款网络安全单兵工具，专为个人渗透测试员和安全研究人员设计。它整合了一系列实用的安全工具，例如密码破解工具、网络扫描器、漏洞利用工具等，帮助用户在一个集中化的界面下执行常见的渗透测试任务。YAKIT通常轻便且易于携带，方便在需要快速响应的应急环境中使用。
+
+
+
+Yakit 平台的核心优势在于利用统一的 Yak 语言和安全架构集成一体。这种架构使得安全能力变得更加集中和高效，减少了因使用多个不同安全产品而产生的复杂性和兼容性问题。统一的架构还意味着更快的响应时间和更高的数据准确性。 
+
+
+
+Yakit 能够统一管理和执行各种渗透测试任务的工具。工具覆盖信息收集、爬虫、交互式 WEB 流量分 析、端口扫描、口令破解等，能够满足各种渗透测试的需求，并且能够在工具之间进行有效的协同。在一 个项目中产生的所有业务流量均会被记录到单独的数据库中，该数据库可以自动上传至统一的离线 Server 之上，实现数据的追踪和管理，也可以为后续的质量分析提供数据支撑。 同时，Yakit 中原生集成自研网络安全大模型“万径千机 (ChatCS)”，在测试过程中遇到的所有问题 均有专业的 AI 机器人进行高效回复。
+
+
+
+# 二、安装
+
+存在两种下载方式
+
+- **官网：**https://www.yaklang.com/
+- **Github：**https://github.com/yaklang/yakit/releases
+
+![image-20250113161455737](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131614034.png)
+
+
+
+1、双击下载的可执行程序进行安装。（建议以管理员身份运行）
+
+![image-20250113162021962](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131620011.png)
+
+
+
+2、初始化引擎。
+
+ Yakit 的核心并不在工具本身上，而是依托于 Yak gRPC 接口，把 Yakit 当作一个 "视窗" 来操纵 Yak 引擎来完成想要实现的安全能力。
+
+- 本地模式：默认启动一个随机端口的 `yak grpc` 服务器
+- 远程模式： `yak grpc` 服务器可以启动在任何平台 / 任何网络位置，包括远端托管主机 ECS/VPS、本地个人 PC、内网环境
+
+`yak grpc` 启动参数支持设置 `--tls` 与 `--secret` 以实现一些远程连接的安全需求。
+
+![image-20250113162140986](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131621050.png)
+
+
+
+
+
+# 三、MITM交互式劫持
+
+![image-20250113164213593](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131642759.png)
+
+
+
+存在两种劫持方式：
+
+- 使用免配置模式。不需要任何其他配置，只需安装Chrome 浏览器，免配置启动之后将打开一个新的浏览器会话，其中所有流量都将通过 Yakit 自动代理。无需安装 Yakit 的 CA 证书就可以使用它来通过 HTTPS 进行测试。
+- 使用选择的外部浏览器。需要配置浏览器以与 Yakit的 MITM 一起使用，并在浏览器中安装 Yakit 的 CA 证书。
+
+
+
+## 3.1、**免配置模式**
+
+配置代理处默认为：[http://127.0.0.1:8083](http://127.0.0.1:8083/) 默认配置代理无需修改，点击`启动免配置Chrome` 默认启动谷歌浏览器，即开始劫持抓包。
+
+![image-20250113164601979](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131646073.png)
+
+
+
+## 3.2、使用选择的外部浏览器
+
+1、配置好代理的监听端口
+
+![image-20250113170303878](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131703964.png)
+
+
+
+2、下载证书
+
+![image-20250113170420569](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131704713.png)
+
+
+
+3、去掉证书后面的`.pem`，双击进行安装，证书存储选择`受信任的根证书颁发机构`
+
+![image-20250113170744347](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131707436.png)
+
+
+
+4、浏览器配置代理（我这里使用插件SwitchyOmega）
+
+![image-20250113171041468](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131710542.png)
+
+
+
+5、开始劫持
+
+进入到劫持界面：选择`丢弃请求`，则该条数据不会出现在history，`提交数据`则会将该数据包记录在history 并开始劫持下一个数据包。
+
+![image-20250113171609496](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131716692.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
