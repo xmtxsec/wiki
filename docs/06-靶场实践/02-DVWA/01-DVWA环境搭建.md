@@ -1,94 +1,215 @@
 
-# 简介
+# 一、简介
 
-Damn Vulnerable Web App (DVWA) 是一个非常容易受到攻击的 PHP/MySQL Web 应用程序。其主要目标是帮助安全专业人员在法律环境中测试他们的技能和工具，帮助 Web 开发人员更好地了解保护 Web 应用程序的过程，并帮助教师/学生在课堂环境中教授/学习 Web 应用程序安全性.
-
-
-# 下载
-
-ＤＶＷＡ官网：[http://www.dvwa.co.uk/](http://www.dvwa.co.uk/)
-
-![image-20211217100916989.png](_img/assets/1652254181367-a17adec8-0eba-41af-9103-53e856bd2bcf.png)
+Damn Vulnerable Web App (DVWA) 是一个非常容易受到攻击的 PHP/MySQL Web 应用程序。其主要目标是帮助安全专业人员在法律环境中测试他们的技能和工具，帮助 Web 开发人员更好地了解保护 Web 应用程序的过程，并帮助教师/学生在课堂环境中教授/学习 Web 应用程序安全性。
 
 
-# 使用小皮面板安装
 
-安装完小皮面板并下载 DVWA 后，将下载的 DVWA 文件解压放入小皮面板安装目录下的 www 文件夹中
+**官网：**http://www.dvwa.co.uk/
 
-![image-20220507100548205.png](_img/assets/1652254188692-abaedbe1-66b9-4ae6-989a-049a4cb6297c.png)
-
-
-## 修改配置文件
-打开DVWA下的config文件，下面有一个config.inc.php.dist文件，将此文件copy一份，重新命名为config.inc.php<br />打开config.inc.php文件，将数据库的密码修改为小皮面板中的密码
-
-![image-20220507101153871.png](_img/assets/1652254196022-399452b6-fdb9-427e-8be5-63f3bbc3d785.png)
-
-![image-20220507100846708.png](_img/assets/1652254200236-8ef2a5a4-f82a-44d6-b47f-cafac398b52b.png)
+**GitHub：**https://github.com/digininja/DVWA
 
 
-## 初始化
-然后打开浏览器，访问http://127.0.0.1，即可打开DVWA网站
 
-首先检查配置，红色的是我们需要修改的，要不然在后面的联系过程中会出现问题
+# 二、环境搭建
 
-![image-20220507102027144.png](_img/assets/1652254204458-46236c1f-5b1f-428e-a156-5a1ccd84d728.png)
+## 2.1、Linux环境下搭建
 
+### 2.1.1、使用LAMP环境搭建
 
-## 配置magic_quotes_gpc
-
-打开php.ini文件
-
-![image-20220507102512593.png](_img/assets/1652254210736-2d99d82a-6fb8-4409-b8cd-e281e4c2b166.png)
-
-修改为如图所示
-
-![image-20220507102609343.png](_img/assets/1652254215464-491f1d32-4fbc-421a-aab8-84731c15b600.png)
+LAMP的意思是：Linux+Apache+MySQL+PHP
 
 
-## 配置reCAPTCHA key
 
-这个 reCAPTCHA key 可以访问 [https://www.google.com/recaptcha/admin/create](https://www.google.com/recaptcha/admin/create) 来生成，这里就直接使用别人提供的
+1、安装Apache
 
 ```
-Site key:6LdJJlUUAAAAAH1Q6cTpZRQ2Ah8VpyzhnffD0mBb
-Secret key:6LdJJlUUAAAAAM2a3HrgzLczqdYp4g05EqDs-W4K
+yum -y install httpd
 ```
 
-打开 dvwa/config/config.inc.php 这个配置文件，将key填入即可
-
-![image-20220507103326786.png](_img/assets/1652254224046-79511083-8005-4634-8ddd-a5c5cf44a785.png)
+![image-20250116224951846](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162249909.png)
 
 
-## 重启
-全部修改完成后重启小皮面板的服务，访问DVWA站点
 
-![image-20220507103449408.png](_img/assets/1652254228575-ebc2ce87-a679-4f50-81b4-01a0fa10ab51.png)
+2、修改Apache配置文件`httpd.conf`将125行的none改为all，并重启服务
 
-确认没有问题之后点击最下方的`Create / Reset Database`创建数据库即可
+```
+vim /etc/httpd/conf/httpd.conf
+systemctl restart httpd
+```
 
-![image-20220507103706986.png](_img/assets/1652254233162-dabfbba5-45ed-410e-8826-3093c9101e0a.png)
-
-
-## 登录
-
-默认账户和密码 `admin/password`，登录后就可以愉快的玩耍了
-
-![image-20220507103824144.png](_img/assets/1652254237617-f0af169a-96e7-4431-b553-f3f579fba75b.png)
+![image-20250116225320941](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162253016.png)
 
 
-# 使用docker搭建
+
+3、浏览器访问是否成功，如果访问失败可以使用以下命令关闭防火墙后再次尝试
+
+```
+systemctl stop firewalld
+```
+
+![image-20250116225950606](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162259782.png)
 
 
-## 安装docker
+
+4、安装Mariadb
+
+```
+yum -y install mariadb-server mariadb	#安装Mariadb
+systemctl restart mariadb.service	#重启服务
+```
+
+![image-20250116230226496](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162302554.png)
+
+
+
+5、初始化数据库
+
+```
+mysql_secure_installation
+```
+
+进去之后直接回车，然后输入密码，后面全都直接回车
+
+![image-20250116230806912](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162308980.png)
+
+
+
+6、安装PHP
+
+```
+yum -y install php
+```
+
+![image-20250116230927204](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162309252.png)
+
+
+
+7、安装PHP组件，使php支持Mariadb
+
+```
+yum -y install php-mysql php-gd libjpeg* php-imap php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-mcrypt php-bcmath php-mhash libmcrypt
+```
+
+![image-20250116231009524](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162310579.png)
+
+
+
+8、重启Apache、MariaDB，并在Apache根目录下创建PHP文件测试是否搭建成功。
+
+```
+systemctl restart httpd		#重启Apache
+systemctl restart mariadb	#重启MariaDB
+```
+
+在`/var/www/html`目录下创建test.php文件，内容如下
+
+```php
+<?php
+phpinfo();
+?>
+```
+
+![image-20250116231541787](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162315860.png)
+
+
+
+9、浏览器访问`http://YOUIP/test.php`显示如下界面表示创建成功
+
+![image-20250116231715952](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162317020.png)
+
+
+
+10、将下载好的DVWA压缩包上传到`/var/www/html`目录下解压并重新命名为DVWA
+
+```
+unzip DVWA-master.zip -d /var/www/html/
+mv DVWA-master DVWA
+```
+
+![image-20250116233254905](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162332992.png)
+
+
+
+11、在数据库里面创建一个库给DVWA
+
+```
+mysql -uroot -p
+create database dvwa;
+grant all on dvwa.* to dvwa@localhost identified by '123456';
+flush privileges;
+exit
+```
+
+![image-20250116233526843](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162335905.png)
+
+
+
+12、在`/var/www/html/DVWA/config`目录下修改DVWA配置文件
+
+```
+cp config.inc.php.dist config.inc.php
+vi config.ini.php
+```
+
+修改这段代码对应自己数据库相应的内容
+
+```
+#See README.md for more information on this.
+$_DVWA = array();
+$_DVWA[ 'db_server' ]   = 'localhost';
+$_DVWA[ 'db_database' ] = 'dvwa';
+$_DVWA[ 'db_user' ]     = 'dvwa';
+$_DVWA[ 'db_password' ] = '123456';
+$_DVWA[ 'db_port']      = '3306';
+
+#You'll need to generate your own keys at: https://www.google.com/recaptcha/admin
+$_DVWA[ 'recaptcha_public_key' ]  = '6LdJJlUUAAAAAH1Q6cTpZRQ2Ah8VpyzhnffD0mBb';
+$_DVWA[ 'recaptcha_private_key' ] = '6LdJJlUUAAAAAM2a3HrgzLczqdYp4g05EqDs-W4K';
+
+```
+
+![image-20250116235627647](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162356716.png)
+
+
+
+13、浏览器访问`http://YOUIP/DVWA/setup.php`，点击最下方的`Create/Reset Database`
+
+![image-20250116235235315](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162352385.png)
+
+
+
+14、可以开始使用了，账号密码：admin/password
+
+![image-20250116235831401](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162358472.png)
+
+
+
+PS：如果不想每次开机都重启服务，可以设置开机自启
+
+```
+systemctl enable httpd				#设置开机自启Apache
+systemctl enable mariadb.service	#设置开机自启MariaDB
+```
+
+
+
+
+
+
+### 2.1.2、使用docker搭建
+
+1、安装docker
 
 ```
 yum -y install docker
 ```
 
-![image-20220507104444194.png](_img/assets/1652254242706-5efa0290-8180-4852-a245-b399bf8377ea.png)
+![image-20250117000514508](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170005573.png)
 
 
-## 安装docker-compose
+
+2、安装docker-compose
 
 方法一：
 
@@ -110,34 +231,105 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.2/docker-
 docker-compose --version
 ```
 
-![image-20220507110200554.png](_img/assets/1652254249785-122e844e-39bd-475f-99e9-0feaf662b148.png)
-
-若是出现错误`-bash: /usr/local/bin/docker-compose: Permission denied`输入`chmod +x /usr/local/bin/docker-compose` 即可。
+![image-20250117001107315](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170011382.png)
 
 
-## 下载容器
+
+若是出现错误`-bash: /usr/local/bin/docker-compose: Permission denied`
+
+输入`chmod +x /usr/local/bin/docker-compose` 即可。
+
+
+
+3、启动docker并下载容器
+
+PS：容器下载失败看这里：
+
+[docker镜像爬取失败解决方法](https://blog.csdn.net/dutianze/article/details/142555742)
+
+[这些方法拯救你的Docker](https://mp.weixin.qq.com/s?__biz=MjM5NzEyMzg4MA==&mid=2649507965&idx=8&sn=3ca2bfad61d126e173ac12ac90d4f545&chksm=bfdfc666df40400341e408bcbd8a2e0e3d15895c39218d4419a97ace92934520a441ae4bac67&scene=27)
 
 ```
-docker pull sagikazarmark/dvwa
+systemctl start docker
+docker pull vulnerables/web-dvwa
 ```
 
-![image-20220507111022216.png](_img/assets/1652254254369-941ca133-5412-496b-92b0-e33f0fa0b89b.png)
+![image-20250117004506893](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170045952.png)
 
 
-## 启动容器
+
+4、查看并启动容器
 
 ```
-docker run -d -p 8080:80 e9
+docker images
+docker run -d -p 8080:80 ab
 ```
 
-![image-20220507111515427.png](_img/assets/1652254258805-11f85ef1-bdc0-4275-bca2-ce5f5a6b7370.png)
+![image-20250117004719285](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170047340.png)
 
 
-## 登录
-浏览器访问http://YOUIP:8080
 
-![image-20220507111554133.png](_img/assets/1652254263076-f06aa30f-9d91-4662-be40-c76709a67572.png)
+5、登录
 
-账号密码admin/password，可以愉快的玩耍了。
+浏览器访问`http://YOUIP:8080`账号密码：admin/password，可以愉快的玩耍了。
 
-![image-20220507111738264.png](_img/assets/1652254268362-e1e267d2-18d9-4051-869f-65174491439f.png)
+![image-20250117004925848](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170049924.png)
+
+
+
+## 2.2、Windows环境下搭建
+
+### 2.2.1、使用小皮面板安装
+
+1、官网下载小皮面板并安装
+
+**官网：**https://www.xp.cn/
+
+
+
+2、安装完小皮面板并下载 DVWA 后，将下载的 DVWA 文件解压放入小皮面板安装目录下的 www 文件夹中
+
+![image-20250117010259455](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170102500.png)
+
+
+
+
+
+3、修改配置文件`config.inc.php`
+
+打开DVWA下的`config`文件夹，有一个`config.inc.php.dist`文件，将此文件复制一份重新命名为`config.inc.php`
+
+打开`config.inc.php`文件，将数据库的密码修改为小皮面板中数据库的密码，并配置`reCAPTCHA key`
+
+```
+$_DVWA = array();
+$_DVWA[ 'db_server' ]   = '127.0.0.1';
+$_DVWA[ 'db_database' ] = 'dvwa';
+$_DVWA[ 'db_user' ]     = 'root';
+$_DVWA[ 'db_password' ] = '123456';
+$_DVWA[ 'db_port']      = '3306';
+```
+
+
+
+这个 reCAPTCHA key 可以访问 [https://www.google.com/recaptcha/admin/create](https://www.google.com/recaptcha/admin/create) 来生成
+
+```
+$_DVWA[ 'recaptcha_public_key' ]  = '6LdJJlUUAAAAAH1Q6cTpZRQ2Ah8VpyzhnffD0mBb';
+$_DVWA[ 'recaptcha_private_key' ] = '6LdJJlUUAAAAAM2a3HrgzLczqdYp4g05EqDs-W4K';
+```
+
+![image-20250117013404155](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170134223.png)
+
+
+
+4、浏览器访问http://127.0.0.1/DVWA，点击最下方的`Create/Reset Database`
+
+![image-20250117012309736](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170123809.png)
+
+
+
+5、默认账户和密码 `admin/password`，登录后就可以愉快的玩耍了
+
+![image-20250117012330603](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501170123694.png)
+
