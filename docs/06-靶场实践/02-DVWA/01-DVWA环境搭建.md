@@ -9,7 +9,7 @@ Damn Vulnerable Web App (DVWA) 是一个非常容易受到攻击的 PHP/MySQL We
 
 **GitHub：**https://github.com/digininja/DVWA
 
-
+https://zhuanlan.zhihu.com/p/888170886
 
 # 二、环境搭建
 
@@ -173,9 +173,48 @@ $_DVWA[ 'recaptcha_private_key' ] = '6LdJJlUUAAAAAM2a3HrgzLczqdYp4g05EqDs-W4K';
 
 
 
-13、浏览器访问`http://YOUIP/DVWA/setup.php`，点击最下方的`Create/Reset Database`
+13、浏览器访问`http://YOUIP/DVWA/setup.php`，可以看到显示我们还有一些问题需要处理（状态为红色，表示在尝试完成某些模块时会出现问题）。
 
-![image-20250116235235315](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501162352385.png)
+```
+Versions of PHP below 7.x are not supported, please upgrade.
+PHP function display_errors: Disabled
+PHP function display_startup_errors: Disabled
+PHP function allow_url_include: Disabled
+Writable folder /var/www/html/dvwa/hackable/uploads/: No
+Writable folder /var/www/html/dvwa/config: No
+```
+
+
+
+14、升级PHP版本
+
+```
+#查看已安装的php的所有包
+yum list installed | grep php
+#卸载上述包
+yum remove php*
+#换下载源为remi
+yum install epel-release
+rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+#安装php7.4
+yum -y install php74-php-mysql php74-php-gd libjpeg* php74-php-imap php74-php-ldap php74-php-odbc php74-php-pear php74-php-xml php74-php-xmlrpc php74-php-mbstring php74-php-mcrypt php74-php-bcmath php74-php-mhash libmcrypt
+```
+
+![image-20250117175546421](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501171755752.png)
+
+
+
+修改`/etc/opt/remi/php74/php.ini`文件
+
+
+
+
+
+
+
+点击最下方的`Create/Reset Database`
+
+
 
 
 
