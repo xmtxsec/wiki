@@ -254,6 +254,7 @@
   * 0X07 综合渗透工具
     * [0X00 Metasploit](07-工具教程\08-综合渗透工具\01-Metasploit.md)
     * [0X01 Cobalt Strile](07-工具教程\08-综合渗透工具\02-Cobalt_Strile.md)
+    * [0X02 Yakit集成化单兵安全能力平台](07-工具教程\08-综合渗透工具\03-Yakit集成化单兵安全能力平台.md)
   * 0X08 文件同步工具
     * [0X00 Rsync](07-工具教程\09-文件同步工具\01-Rsync.md)
     * [0X01 Syncthing](07-工具教程\09-文件同步工具\02-Syncthing.md)

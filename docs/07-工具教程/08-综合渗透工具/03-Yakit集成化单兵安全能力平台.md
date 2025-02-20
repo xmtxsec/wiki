@@ -6,7 +6,7 @@ YAKIT（Yet Another Knife for IT Security）是一款网络安全单兵工具。
 
 # 二、安装
 
-存在两种下载方式
+## 2.1、下载客户端
 
 - **官网：**https://www.yaklang.com/
 - **Github：**https://github.com/yaklang/yakit/releases
@@ -21,14 +21,41 @@ YAKIT（Yet Another Knife for IT Security）是一款网络安全单兵工具。
 
 
 
-2、初始化引擎。
+## 2.2、初始化引擎
 
- Yakit 的核心并不在工具本身上，而是依托于 Yak gRPC 接口，把 Yakit 当作一个 "视窗" 来操纵 Yak 引擎来完成想要实现的安全能力。
+Yakit 的核心并不在工具本身上，而是依托于 Yak gRPC 接口，把 Yakit 当作一个 "视窗" 来操纵 Yak 引擎来完成想要实现的安全能力。
 
-- 本地模式：默认启动一个随机端口的 `yak grpc` 服务器
-- 远程模式： `yak grpc` 服务器可以启动在任何平台 / 任何网络位置，包括远端托管主机 ECS/VPS、本地个人 PC、内网环境
 
-`yak grpc` 启动参数支持设置 `--tls` 与 `--secret` 以实现一些远程连接的安全需求。
+
+- **远程模式：**`yak grpc` 服务器可以启动在任何平台 / 任何网络位置，包括远端托管主机 ECS/VPS、本地个人 PC、内网环境。`yak grpc` 启动参数支持设置 `--tls` 与 `--secret` 以实现一些远程连接的安全需求。
+
+1、首先需要在Linux环境上安装Yakit
+
+```
+chmod +x yak_linux_amd64 && ./yak_linux_amd64 install
+```
+
+![image-20250220163436420](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201634590.png)
+
+
+
+2、启动 yak grpc
+
+```
+yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
+```
+
+![image-20250220164151218](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201641305.png)
+
+
+
+3、使用本地yakit客户端连接
+
+![image-20250220164542780](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201645870.png)
+
+
+
+- **本地模式**：启动即可。
 
 ![image-20250113162140986](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131621050.png)
 
