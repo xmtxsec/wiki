@@ -278,8 +278,9 @@
       * [0X01 Struts2漏洞利用工具合集](07-工具教程\15-漏洞利用工具\01-Struts2\02-Struts2漏洞利用工具合集.md)
   * 0X0F 数据包分析工具
     * [0X00 Wireshark](07-工具教程\16-数据包分析工具\01-Wireshark.md)
-  * 0X10 API 探测工具
-    * 0X00 [BP插件-APIKit](07-工具教程\17-API探测工具\01-BP插件APIKit.md)
+  * 0X10 BP插件工具
+    * [0X00 BP插件-APIKit](07-工具教程\17-BP插件工具\01-BP插件APIKit.md)
+    * [0X01 BP插件-EnhancedBurpGPT](07-工具教程\17-BP插件工具\02-BP插件EnhancedBurpGPT.md)
 
 * **网安杂谈**
 
