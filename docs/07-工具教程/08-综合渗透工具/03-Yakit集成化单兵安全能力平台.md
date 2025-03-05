@@ -11,13 +11,13 @@
 - **官网：**https://www.yaklang.com/
 - **Github：**https://github.com/yaklang/yakit/releases
 
-![image-20250113161455737](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131614034.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131614034.png" alt="image-20250113161455737" style="zoom: 50%;" />
 
 
 
 1、双击下载的可执行程序进行安装。（建议以管理员身份运行）
 
-![image-20250113162021962](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131620011.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131620011.png" alt="image-20250113162021962" style="zoom: 67%;" />
 
 
 
@@ -35,7 +35,7 @@ Yakit 的核心并不在工具本身上，而是依托于 Yak gRPC 接口，把 
 chmod +x yak_linux_amd64 && ./yak_linux_amd64 install
 ```
 
-![image-20250220163436420](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201634590.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201634590.png" alt="image-20250220163436420" style="zoom: 67%;" />
 
 
 
@@ -45,25 +45,25 @@ chmod +x yak_linux_amd64 && ./yak_linux_amd64 install
 yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 ```
 
-![image-20250220164151218](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201641305.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201641305.png" alt="image-20250220164151218" style="zoom:67%;" />
 
 
 
 3、使用本地yakit客户端连接
 
-![image-20250220164542780](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201645870.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502201645870.png" alt="image-20250220164542780" style="zoom:50%;" />
 
 
 
 - **本地模式**：启动即可。
 
-![image-20250113162140986](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131621050.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131621050.png" alt="image-20250113162140986" style="zoom:50%;" />
 
 
 
 # 三、MITM交互式劫持
 
-![image-20250113164213593](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131642759.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131642759.png" alt="image-20250113164213593" style="zoom: 50%;" />
 
 
 
@@ -78,7 +78,7 @@ yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 
 配置代理处默认为：[http://127.0.0.1:8083](http://127.0.0.1:8083/) 默认配置代理无需修改，点击`启动免配置Chrome` 默认启动谷歌浏览器，即开始劫持抓包。
 
-![image-20250113164601979](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131646073.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131646073.png" alt="image-20250113164601979" style="zoom:50%;" />
 
 
 
@@ -86,25 +86,25 @@ yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 
 1、配置好代理的监听端口
 
-![image-20250113170303878](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131703964.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131703964.png" alt="image-20250113170303878" style="zoom: 67%;" />
 
 
 
 2、点击高级配置下载证书，也可以在配置好代理后访问`http://download-mitm-cert.yaklang.io`进行下载
 
-![image-20250113170420569](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131704713.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131704713.png" alt="image-20250113170420569" style="zoom:50%;" />
 
 
 
 3、去掉证书后面的`.pem`，双击进行安装，证书存储选择`受信任的根证书颁发机构`
 
-![image-20250113170744347](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131707436.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131707436.png" alt="image-20250113170744347" style="zoom: 67%;" />
 
 
 
 4、浏览器配置代理（我这里使用插件`SwitchyOmega`）
 
-![image-20250113171041468](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131710542.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131710542.png" alt="image-20250113171041468" style="zoom: 67%;" />
 
 
 
@@ -125,7 +125,7 @@ yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 
 
 
-![image-20250113171609496](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131716692.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202501131716692.png" alt="image-20250113171609496" style="zoom:50%;" />
 
 
 
@@ -133,13 +133,13 @@ yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 
 所有流经 Yakit 的请求，都会在 History 中记录下来，我们可以通过该页面，查看传输的数据内容，对数据进行测试和验证。History中的所有数据包，均支持对数据包进行单个操作，或者批量操作。在最左边的操作栏，点击浏览器图标可以在浏览器中打开该请求对应的url，点击箭头图标可查看该请求详细的内容。
 
-![image-20250223220042988](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232201180.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232201180.png" alt="image-20250223220042988" style="zoom: 67%;" />
 
 
 
 网站树将历史请求以树结构的形式进行展示，按照网站的层级和深度，树形展示整个应用系统的结构和关联其他域的url情况。
 
-![image-20250223221729559](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232217624.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232217624.png" alt="image-20250223221729559" style="zoom:67%;" />
 
 
 
@@ -149,7 +149,7 @@ yak --host 0.0.0.0 --port 8087 --secret Talent@123 --tls
 
 Web Fuzzer模块支持用户自定义HTTP原文发送请求。使用 Web Fuzzer进行请求与响应的消息验证分析，比如修改请求参数，验证输入的漏洞；修改请求参数，验证逻辑越权；从拦截历史记录中，捕获特征性的请求消息进行请求重放。
 
-![image-20250223223858282](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232238349.png)
+<img src="https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202502232238349.png" alt="image-20250223223858282" style="zoom:67%;" />
 
 
 
