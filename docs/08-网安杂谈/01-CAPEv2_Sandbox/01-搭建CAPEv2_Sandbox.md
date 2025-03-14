@@ -5,7 +5,7 @@
 CAPEv2 Sandbox 是一款用于自动分析可疑文件或恶意文件的开源沙箱。用于在隔离环境中执行恶意文件，同时检测其动态行为并收集取证据。
 
 - **项目地址：**https://github.com/kevoreilly/CAPEv2
-- **项目文档：**https://capev2.readthedocs.io/en/latest/
+- **项目文档：**https://capev2.readthedocs.io/en/latest/ （好像是没有维护了）
 
 ------
 
@@ -57,6 +57,7 @@ sudo apt install ninja-build
 
 
 - **建议：**完成此步骤后建议拍摄虚拟机快照。
+- **在安装CAPEv2的过程中一定要保持网络通常！！！**
 
 ------
 
@@ -64,7 +65,25 @@ sudo apt install ninja-build
 
 # 3、安装KVM
 
-可以尝试使用CAPE项目提供的KVM安装脚本`kvm-qemu.sh`进行安装，但是我尝试使用脚本并没有正确安装。
+- 可以安装和使用您喜欢的任何虚拟机管理程序，但官方建议使用 KVM！
+
+
+
+## 3.1、使用项目脚本安装
+
+安装与 KVM 相关的所有内容（包括 KVM 本身）的脚本位置：`/CAPEv2/installer/kvm-qemu.sh`
+
+- 建议：使用`git clone`来克隆项目到本地，不要使用下载`.zip`的方法。
+
+
+
+**1、修改脚本文件**
+
+在执行脚本之前，将脚本内容里面出现的 `<WOOT>` 替换为你真正的硬件模式。
+
+
+
+**2、执行修改后的脚本**
 
 ```
 sudo chmod a+x kvm-qemu.sh
@@ -72,6 +91,20 @@ sudo ./kvm-qemu.sh all <username> | tee kvm-qemu.log
 ```
 
 
+
+**3、安装virt-manager（可选）**
+
+将 `<username>` 替换为您的实际用户名。
+
+```
+sudo ./kvm-qemu.sh virtmanager <username> | tee kvm-qemu-virt-manager.log
+```
+
+
+
+## 3.2、手动安装KVM
+
+我采用的是手动安装KVM，搞不懂怎样将脚本内容里面出现的 `<WOOT>` 替换为硬件模式。
 
 **1、手动安装KVM**
 
@@ -295,18 +328,64 @@ virsh snapshot-create-as --domain "<Name of VM>" --name "<Name of snapshot>"
 
 # 6、安装CAPEv2
 
-**1、执行脚本`cape2.sh`**
+**1、查看脚本说明**
 
-在CAPEv2/installer/目录下执行（执行时间较长）
+脚本位置在`/CAPEv2/installer/cape2.sh`。
+
+在执行脚本前建议使用`-h`查看帮助和用法信息，官方建议阅读脚本本身以了解它们的功能。（很重要）
 
 ```
 sudo chmod a+x cape2.sh
-sudo ./cape2.sh base cape | tee cape.log
+sudo ./cape2.sh -h
 ```
 
-运行完后重启计算机。
+![image-20250314174346577](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503141744773.png)
 
 
+
+**2、修改脚本文件**
+
+修改 `NETWORK_IFACE`，`IFACE_IP` 和 `PASSWD` 变量以确保正确安装。
+
+![image-20250314175500330](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503141755551.png)
+
+
+
+**3、执行脚本`cape2.sh`**
+
+按照脚本说明正确选择你所需要的方式执行脚本执行（执行时间较长），例如：
+
+```
+#安装依赖、CAPEv2、systemd等
+./cape2.sh base 192.168.1.1 | tee ./cape2.sh.log 
+```
+
+```
+#安装所有东西，建议仅在了解其影响的情况下使用
+./cape2.sh all 192.168.1.1 | tee ./cape2.sh.log
+```
+
+```
+#安装CAPEv2
+./cape2.sh sandbox 192.168.1.1 | tee ./cape2.sh.log
+```
+
+```
+#安装所有依赖并进行性能优化
+./cape2.sh dependencies 192.168.1.1 | tee ./cape2.sh.log
+```
+
+我在这里执行的命令是（可能存在问题）：
+
+```
+./cape2.sh base cape | tee cape.log
+```
+
+- 运行完后重启计算机。
+
+
+
+**4、查看服务状态**
 
 计算器重启后分别执行以下指令，检查是否均有对应服务存在。
 
@@ -360,7 +439,7 @@ poetry install
 
 
 
-执行以下指令，若得到对应输出，则安装成功。
+执行以下命令，若得到对应输出，则安装成功。
 
 ```
 poetry env list
@@ -368,7 +447,7 @@ poetry env list
 
 ![image-20250308111829702](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503121057208.png)
 
-- 从现在起，需要在 Poetry 的虚拟环境中执行 CAPE。为此，只需要 `poetry run <command>` 。例如：
+- **注意：**从现在起，需要在 Poetry 的虚拟环境中执行 CAPE。为此，只需要 `poetry run <command>` 。例如：
 
   ```
   sudo -u cape poetry run python3 cuckoo.py
