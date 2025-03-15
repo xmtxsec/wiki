@@ -285,7 +285,8 @@
 * **网安杂谈**
 
   * 0X00 CAPEv2 Sandbox
-    * [01-搭建CAPEv2 Sandbox](08-网安杂谈\01-CAPEv2_Sandbox\01-搭建CAPEv2_Sandbox.md)
+    * [0X00-搭建CAPEv2 Sandbox](08-网安杂谈\01-CAPEv2_Sandbox\01-搭建CAPEv2_Sandbox.md)
+    * [0X01-搭建CAPEv2_Sandbox碰到的问题](08-网安杂谈\01-CAPEv2_Sandbox\02-搭建CAPEv2_Sandbox碰到的问题.md)
   * [记电脑更新后黑屏只显示鼠标指针解决经历](08-网安杂谈\记电脑更新后黑屏只显示鼠标指针解决经历.md)
   * [ARP欺骗原理分析及实验](08-网安杂谈\ARP欺骗.md)
   * [常见攻击事件应用场景描述及处理方法](08-网安杂谈\常见攻击事件应用场景描述及处理方法.md)
