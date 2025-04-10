@@ -2,7 +2,7 @@
 
 ​	恶意软件分析沙箱是在隔离的环境中运行未知且不受信任的应用程序或文件，并获取有关文件用途的信息。恶意软件沙箱是动态分析方法的实际应用，它不是静态分析二进制文件，而是实时执行和监控，可以获取有关恶意软件的更多详细信息。
 
-CAPEv2 Sandbox 是一款用于自动分析可疑文件或恶意文件的开源沙箱。用于在隔离环境中执行恶意文件，同时检测其动态行为并收集取证据。
+​	CAPEv2 Sandbox 是一款用于自动分析可疑文件或恶意文件的开源沙箱。用于在隔离环境中执行恶意文件，同时检测其动态行为并收集取证据。
 
 - **项目地址：**https://github.com/kevoreilly/CAPEv2
 - **项目文档：**https://capev2.readthedocs.io/en/latest/ （好像是没有维护了）
@@ -22,6 +22,13 @@ Ubuntu ISO下载链接: https://pan.baidu.com/s/1ldG9TieC4jdF4SysUo0Nsw?pwd=fdb9
 ![image-20250308003732230](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503121056938.png)
 
 ![image-20250308002324773](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503121056791.png)
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt autoremove
+sudo apt clean
+```
 
 
 
@@ -80,6 +87,18 @@ sudo apt install ninja-build
 **1、修改脚本文件**
 
 在执行脚本之前，将脚本内容里面出现的 `<WOOT>` 替换为你真正的硬件模式。
+
+```
+sudo acpidump > acpidump.out
+sudo acpixtract -a acpidump.out
+sudo iasl -d dsdt.dat
+```
+
+最后一个命令的输出生成了一行代码：
+
+ACPI：DSDT 0x0000000000000000 0213AC（v02 HPQOEM **82BF** 00000000 INTL 20121018）
+
+这里的 **82BF** 就是我们想要的，你的系统需要更具你的实际情况处理。（不知道为什么这里我系统显示的是 **Custom**）
 
 
 
@@ -185,7 +204,17 @@ sudo virt-manager
 
 只有 `32位(x86)` 版本的 Python3 是目前支持 Windows，因为分析器与低级 Windows 库交互的方式。使用 `64位`版本的 Python 将使 Windows 中的分析器崩溃。
 
+官方文档建议首选 Python 版本> 3.6。我这里用的是3.8版本，后面碰到一些问题。
+
 ![image-20250308011852442](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503121056801.png)
+
+我建议使用Python 版本>= 3.9。但是Python 3.9 及以上版本不支持 win7 了。
+
+有大神自行编译了源码并制作了支持 win7 的 Python 3.9 及以上版本的安装包。
+
+GitHub：https://github.com/adang1345/PythonWin7
+
+
 
 - 安装Python的时候可能才能在无法安装的问题，这是因为系统缺少补丁，打上补丁即可。
 
@@ -262,10 +291,14 @@ netsh interface teredo set state disabled
 
 在`CAPEv2`项目的`agent/` 目录中，找到`agent.py`文件，将它复制到win7虚拟机中，运行(双击)agent.py将启动侦听连接的HTTP服务器。
 
-- 如果运行时遇到下图报错，只需要将`agent.py`文件的内容在Windows机器上复制粘贴到`.txt`文件中然后重命名为`agent.py`即可。
+- 如果运行时遇到下图报错，这是因为在 Python 3.9 及以上版本中，`dict` 类型支持直接使用方括号（如 `dict[str, str]`）进行类型注解。但在 Python 3.8 或更早版本中，这种语法是不被支持的。
 
   ![image-20250308014930721](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202503121057837.png)
 
+  解决方案一：安装 Python 版本>= 3.9，上面已经说过了。
+  
+  解决方案二：使用官方0.11版本的 agent.py 脚本，下载链接：https://download.csdn.net/download/weixin_72723791/90591648
+  
   
 
 启动脚本后在宿主机通过`curl`命令访问win7虚拟机的8000端口，得到一串json字符串，则代表部署成功。

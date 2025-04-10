@@ -108,9 +108,11 @@ export unset https_proxy="https://192.168.1.2:10809";export unset http_proxy="ht
 
 ## 3.2、运行agent.py报错
 
-这个问题是编码问题导致的，项目作者在编写`agent.py`时是在`Linux`环境下编写的，而我们的运行环境是`Windows`环境。
+这是因为在 Python 3.9 及以上版本中，`dict` 类型支持直接使用方括号（如 `dict[str, str]`）进行类型注解。但在 Python 3.8 或更早版本中，这种语法是不被支持的。
 
-将`agent.py`文件的内容在Windows机器上复制粘贴到`.txt`文件中然后重命名为`agent.py`即可。
+- 解决方案一：安装 Python 版本>= 3.9，上面已经说过了。
+
+- 解决方案二：使用官方0.11版本的 agent.py 脚本，下载链接：https://download.csdn.net/download/weixin_72723791/90591648
 
 这个问题我在[搭建CAPEv2](https://wiki.xmtxsec.top/#/08-%E7%BD%91%E5%AE%89%E6%9D%82%E8%B0%88\01-CAPEv2_Sandbox\01-%E6%90%AD%E5%BB%BACAPEv2_Sandbox?id=_5%e3%80%81%e9%85%8d%e7%bd%ae%e8%99%9a%e6%8b%9f%e6%9c%ba)的文章中也有说明。
 
