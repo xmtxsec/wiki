@@ -239,6 +239,7 @@
   * 0X01 代理工具
     * [0X00 Proxyxhains](07-工具教程\02-代理工具\01-Proxyxhains.md)
     * [0X01 Burpsuite](07-工具教程\02-代理工具\02-Burpsuite.md)
+    * [0X02 Proxifier](07-工具教程\02-代理工具\03-Proxifier.md)
   * 0X02 下载工具
     * [0X00 Aria2](07-工具教程\03-下载工具\01-Aria2.md)
   * 0X03 SQL注入工具
