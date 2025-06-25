@@ -265,9 +265,17 @@ tshark -r input.pcap -T json > output.json
 
 
 
+💎 **最佳实践建议**
 
+**自动化脚本**：使用 Python 调用 `tshark` 批量处理 PCAP 并解析文本（示例）:
 
-
+```python
+import subprocess
+command = "tshark -r traffic.pcap -T fields -e frame.time -e ip.src -e ip.dst -E separator=;"
+output = subprocess.check_output(command, shell=True, text=True)
+with open("result.csv", "w") as f:
+    f.write(output)
+```
 
 
 
