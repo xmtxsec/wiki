@@ -9,11 +9,15 @@ Tshark 是 Wireshark 的命令行版本，专为在无图形界面环境中分�
 
 
 
+官方说明文档：https://www.wireshark.org/docs/man-pages/tshark.html
+
+
+
 # 二、安装 Tshark
 
 ## 2.1、Windows
 
-1. 下载安装包： 访问Wireshark官网，找到适合你系统的安装包。
+1. 下载安装包：访问Wireshark官网，找到适合你系统的安装包。
 2. 安装过程中勾选 Tshark 组件选项。
 3. 配置环境变量（可选）： 为了在终端中直接使用 Tshark 命令，建议将 Wireshark 的安装目录添加到 PATH 环境变量中。
 
@@ -127,7 +131,7 @@ tshark -v  # 输出类似 "TShark 1.10.14"
 
 # 四、使用示例
 
-## 4.1、基本操作
+## 4.1、查看接口信息
 
 查询当前系统可以捕获的接口信息
 
@@ -135,88 +139,213 @@ tshark -v  # 输出类似 "TShark 1.10.14"
 tshark -D
 ```
 
-
-
-捕获实时数据包
-
-```
-#捕获网络接口eth0上的所有数据包
-tshark -i eth0
-```
+![image-20250701222243696](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701222243696.png)
 
 
 
-保存捕获的数据包
+## 4.2、抓取流量
 
 ```
-tshark -i eth0 -w capture.pcap
-```
+# 抓包 同时支持多个网卡抓包
+tshark -i eth0  -i eth1
 
+#设置缓存大小，丢包场景可以设置下，单位为MB
+tshark -i eth0 -B 2
 
+#只抓前面512个字节，抓包小，大流量情况下有用
+tshark -i eth0 -s 512
 
-查看抓包文件
+# 禁止域名解析 只想看ip
+tshark -i eth0  -n
 
-```
-tshark -r capture.pcap
+#设置包保存文件格式
+tshark -i eth0 -F pcapng -w 1.pcapng
 ```
 
 
 
-## 4.2、高级使用计技巧
+## 4.3、抓包过滤
 
-提取关键字段
-
-```
-tshark -r capture.pcap -T fields -e ip.src -e ip.dst -e tcp.port
-```
-
-
-
-使用BPF过滤器，BPF（Berkeley Packet Filter）是一种强大的过滤器语言，可以用于更精确地指定想要捕获的数据包。
+语法采用bpf过滤语法，和tcpdump一样的过滤语法。
 
 ```
-#使用BPF过滤器捕获80端口的TCP数据包
-tshark -i eth0 'tcp port 80'
+# 抓tcp端口为22 ，且含有fin标识的数据包
+tshark -i eth0 -f "tcp port 22 and (tcp[tcpflags] & tcp-fin != 0)"  
+
+# 抓端口为8080或者54的数据包
+tshark -i eth0 -f 'port 8080 or port 54'
 ```
 
 
 
-解析HTTP请求和响应
+## 4.4、自动停止抓包
 
 ```
-tshark -i eth0 'http' -T fields -e http.request.method -e http.response.status_code
-```
+#以数量作为停止条件
+tshark -i eth0 -c 抓包数量
 
+#以时间作为停止条件 60秒
+tshark -i eth0 -a duration:60
 
-
-查看数据包详细信息
-
-```
-tshark -i eth0 -d 'ip.addr == 192.168.1.100' -T fields -e ip.src -e ip.dst -e tcp.srcport -e tcp.dstport -e tcp.seq -e tcp.ack_seq
-```
-
-
-
-过滤某包文件中的数据包
-
-```
-tshark -r http_bak.pcap -R "tcp.dstport= 80" -W http.cap
-说明:过滤包文件中所有TCP协议目的端口为80的数据包，并将过滤的数据包另存为其他包文件。
+#以文件大小作为停止条件 单位为KB
+tshark -i eth0 -a filesize:10 -w 1.pcap
 ```
 
 
 
-跟踪TCP会话
+## 4.5、文件输出控制
 
 ```
-tshark -r capture.pcap -q -z follow,tcp,ascii,0
+#每5秒写下一个文件，写满2个文件后停止
+tshark -i eth0 -b duration:5 -a files:2 -w test.pcap
+
+#每达到5kB写下一个文件，写满2个文件后停止
+tshark -i eth0 -b filesize:5 -a files:2 -w test.pcap
 ```
 
 
 
-## 4.3、PCAP转换为文本
+## 4.6、读取并分析数据包
 
-**1、输出完整协议详情（适合深度分析）**
+```
+# 读取pcap包
+tshark -r test.pcap
+
+# 显示标准点的时间格式
+tshark -r test.pcap  -t ad
+-t 参数设置解码结果的时间格式。
+"ad"表示带日期的绝对时间；
+"a"表示不带日期的绝对时间；
+"r”表示从第一个包到现在的相对时间；
+“d"表示两个相邻包之间的增量时间。
+```
+
+![image-20250701225141666](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701225141666.png)
+
+
+
+## 4.7、过滤和输出格式处理
+
+```
+# -e 指定要在输出中显示的字段
+tshark -r test.pcap -T fields -e frame.number -e ip.src -e ip.dst -e tcp.srcport -e tcp.dstport
+```
+
+
+
+```
+# 抓包或者读pcap文件都可以采用-Y语法进行过滤
+# 过滤dns协议包含特定域名的
+tshark -r test.pcap -Y "matches"in-addr""
+
+# 特定网段
+tshark -r test.pcap -Y 'ip.addr == 172.16.0.0/16'
+
+#  端口范围过滤
+tshark -r test.pcap -Y "tcp.port in {53 8080}"
+
+# 过滤http协议，且返回状态为200的报文 只会匹配返回报文
+tshark -r test.pcap -Y 'http and http.response.code == 200' 
+
+# 查看特定时间范围的包 并且写入到文件
+tshark -r test.pcap -t ad -Y 'frame.time >= "2016-01-04 19:32:47" && frame.time < "2016-01-04 19:32:50" ' -w a.pcap 
+```
+
+
+
+## 4.8、流分析
+
+流分析相当于是在wireshark上直接用右键，选择“追踪流” 。
+
+```
+# 这里的7为tcp.stream的值
+tshark -r test.pcap -q -z follow,tcp,ascii,7 
+```
+
+
+
+## 4.9、专家信息统计
+
+```
+tshark -r test.pcap -z expert -q
+```
+
+![image-20250701232425261](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701232425261.png)
+
+
+
+## 4.10、包长度统计
+
+```
+tshark -r test.pcap -z plen,tree -q
+```
+
+![image-20250701233041215](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233041215.png)
+
+
+
+## 4.11、会话统计
+
+```
+tshark -r test.pcap -z conv,ip -q
+```
+
+![](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233101989.png)
+
+
+
+## 4.12、统计所有IP信息
+
+```
+tshark -r test.pcap -z endpoints,ip -q
+```
+
+![image-20250701233346464](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233346464.png)
+
+
+
+## 4.13、HTTP包情况统计
+
+```
+tshark -q -r test.pcap -2 -R http -z http,tree
+```
+
+![](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233412983.png)
+
+
+
+## 4.15、pcap分层解析
+
+```
+# 查看tcp层
+tshark -r test.pcap -Y "frame.number == 1" -O tcp
+```
+
+![image-20250701233850765](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233850765.png)
+
+
+
+```
+# 查看ip层
+tshark -r test.pcap -Y "frame.number == 1" -O ip
+```
+
+![image-20250701233919284](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233919284.png)
+
+
+
+```
+# 所有层都展开
+tshark -r test.pcap -Y "frame.number == 1" -V
+```
+
+![image-20250701233944292](https://cdn.jsdelivr.net/gh/xmtxsec/picture/img/image-20250701233944292.png)
+
+
+
+# 5、PCAP转换为文本
+
+## 5.1、输出完整协议详情（适合深度分析）
 
 ```
 tshark -r input.pcap -V > output.txt
@@ -230,7 +359,7 @@ tshark -r input.pcap -V > output.txt
 
 
 
-**2、十六进制转储格式（适合二进制分析）**
+## 5.2、十六进制转储格式（适合二进制分析）
 
 ```
 tshark -r input.pcap -x > hex_output.txt
@@ -243,7 +372,7 @@ tshark -r input.pcap -x > hex_output.txt
 
 
 
-**3、表格字段提取（适合结构化处理）**
+## 5.3、表格字段提取（适合结构化处理）
 
 ```
 tshark -r input.pcap -T fields -e frame.time -e ip.src -e ip.dst -e http.request.uri -E separator=, -E header=y > output.csv
@@ -260,7 +389,7 @@ tshark -r input.pcap -T fields -e frame.time -e ip.src -e ip.dst -e http.request
 
 
 
-**4、 简洁摘要格式（类似 Wireshark 主界面）**
+## 5.4、 简洁摘要格式（类似 Wireshark 主界面）
 
 ```
 tshark -r input.pcap > summary.txt
@@ -273,7 +402,7 @@ tshark -r input.pcap > summary.txt
 
 
 
-**5、JSON 格式（适合编程处理）**
+## 5.5、JSON 格式（适合编程处理）
 
 ```
 tshark -r input.pcap -T json > output.json
@@ -287,11 +416,9 @@ tshark -r input.pcap -T json > output.json
 
 
 
-## 4.4、脚本调用
+# 6、结合脚本调用
 
 **情景：**需要将PCAP包中的所有的HTTP流合并，并导出为文本格式。
-
-
 
 **思路：**
 
@@ -385,13 +512,3 @@ echo "完成! HTTP流已保存至: $OUTPUT_TXT"
 
 提取效果：
 ![image-20250627155342520](https://cdn.jsdelivr.net/gh/xmtxsec/picture/imgl/202506271558216.png)
-
-
-
-
-
-
-
-https://www.cnblogs.com/bandaoyu/p/16752224.html
-
-https://blog.51cto.com/u_11529070/9821530
