@@ -216,7 +216,7 @@ GitHub：https://github.com/adang1345/PythonWin7
 
 
 
-- 安装Python的时候可能才能在无法安装的问题，这是因为系统缺少补丁，打上补丁即可。
+- 安装Python的时候可能存在无法安装的问题，这是因为系统缺少补丁，打上补丁即可。
 
   补丁下载链接：https://pan.baidu.com/s/1zCoF8wnNVFRbgYF9g-kl3w?pwd=js4m
 

@@ -289,10 +289,13 @@
 * **网安杂谈**
 
   * 0X00 CAPEv2 Sandbox
-    * [0X00-CAPEv2_Sandbox虚拟化嵌套搭建](08-网安杂谈\01-CAPEv2_Sandbox\01-CAPEv2_Sandbox虚拟化嵌套搭建.md)
-    * [0X01-CAPEv2_Sandbox非虚拟化嵌套搭建](08-网安杂谈\01-CAPEv2_Sandbox\02-CAPEv2_Sandbox非虚拟化嵌套搭建.md)
-    * [0X02-CAPEv2_Sandbox搭建遇到的问题](08-网安杂谈\01-CAPEv2_Sandbox\03-CAPEv2_Sandbox搭建遇到的问题.md)
-    * [0X03-CAPEv2_Sandbox报告解析](08-网安杂谈\01-CAPEv2_Sandbox\04-CAPEv2_Sandbox报告解析.md)
+    * [0X00-CAPEv2_Sanbbox基础介绍](08-网安杂谈\01-CAPEv2_Sandbox\01-CAPEv2_Sanbbox基础介绍.md)
+    * [0X01-CAPEv2_Sandbox虚拟化嵌套搭建](08-网安杂谈\01-CAPEv2_Sandbox\02-CAPEv2_Sandbox虚拟化嵌套搭建.md)
+    * [0X02-CAPEv2_Sandbox非虚拟化嵌套搭建](08-网安杂谈\01-CAPEv2_Sandbox\03-CAPEv2_Sandbox非虚拟化嵌套搭建.md)
+    * [0X03-CAPEv2_Sandbox搭建遇到的问题](08-网安杂谈\01-CAPEv2_Sandbox\04-CAPEv2_Sandbox搭建遇到的问题.md)
+    * [0X04-CAPEv2_Sandbox界面功能介绍](08-网安杂谈\01-CAPEv2_Sandbox\05-CAPEv2_Sandbox界面功能介绍.md)
+    * [0X05-CAPEv2_Sanbbox接口说明](08-网安杂谈\01-CAPEv2_Sandbox\06-CAPEv2_Sanbbox接口说明.md)
+    * [0X06-CAPEv2_Sandbox报告解析](08-网安杂谈\01-CAPEv2_Sandbox\07-CAPEv2_Sandbox报告解析.md)
   * 0X99 疑难杂症
     * [0X00-更新后黑屏只显示鼠标指针](08-网安杂谈\99-疑难杂症\00-更新后黑屏只显示鼠标指针.md)
     * [0X01-无法完成更新，正在撤销更改](08-网安杂谈\99-疑难杂症\01-无法完成更新，正在撤销更改.md)
